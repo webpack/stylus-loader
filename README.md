@@ -748,10 +748,10 @@ If you're new here, please take a moment to review our contributing guidelines b
 [npm-url]: https://npmjs.com/package/stylus-loader
 [node]: https://img.shields.io/node/v/stylus-loader.svg
 [node-url]: https://nodejs.org
-[tests]: https://github.com/webpack-contrib/stylus-loader/workflows/stylus-loader/badge.svg
-[tests-url]: https://github.com/webpack-contrib/stylus-loader/actions
-[cover]: https://codecov.io/gh/webpack-contrib/stylus-loader/branch/master/graph/badge.svg
-[cover-url]: https://codecov.io/gh/webpack-contrib/stylus-loader
+[tests]: https://github.com/webpack/stylus-loader/workflows/stylus-loader/badge.svg
+[tests-url]: https://github.com/webpack/stylus-loader/actions
+[cover]: https://codecov.io/gh/webpack/stylus-loader/branch/main/graph/badge.svg
+[cover-url]: https://codecov.io/gh/webpack/stylus-loader
 [discussion]: https://img.shields.io/github/discussions/webpack/webpack
 [discussion-url]: https://github.com/webpack/webpack/discussions
 [size]: https://packagephobia.now.sh/badge?p=stylus-loader
