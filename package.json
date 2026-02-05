@@ -1,6 +1,6 @@
 {
   "name": "stylus-loader",
-  "version": "8.1.2",
+  "version": "8.1.3",
   "description": "Stylus loader for webpack",
   "keywords": [
     "webpack",

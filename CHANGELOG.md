@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.1.3](https://github.com/webpack/stylus-loader/compare/v8.1.2...v8.1.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* update peer dependency for @rspack/core v2 ([#447](https://github.com/webpack/stylus-loader/issues/447)) ([2af82b2](https://github.com/webpack/stylus-loader/commit/2af82b245bed5ee5cf08f79228c9050c030e66e4))
+
 ### [8.1.2](https://github.com/webpack-contrib/stylus-loader/compare/v8.1.1...v8.1.2) (2025-08-18)
 
 
