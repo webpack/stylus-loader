@@ -87,7 +87,7 @@
     "webpack": "^5.101.0"
   },
   "peerDependencies": {
-    "@rspack/core": "0.x || 1.x",
+    "@rspack/core": "0.x || ^1.0.0 || ^2.0.0-0",
     "stylus": ">=0.52.4",
     "webpack": "^5.0.0"
   },
