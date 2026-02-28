@@ -43,8 +43,8 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "fast-glob": "^3.3.2",
-    "normalize-path": "^3.0.0"
+    "normalize-path": "^3.0.0",
+    "tinyglobby": "^0.2.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.7",
