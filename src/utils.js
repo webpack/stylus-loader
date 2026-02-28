@@ -2,10 +2,32 @@ import path from "node:path";
 // eslint-disable-next-line n/no-deprecated-api
 import { parse } from "node:url";
 
-import fastGlob from "fast-glob";
 import normalizePath from "normalize-path";
 import { Compiler, Evaluator, Parser, nodes, utils } from "stylus";
 import DepsResolver from "stylus/lib/visitor/deps-resolver";
+import { escapePath, glob, isDynamicPattern } from "tinyglobby";
+
+/**
+ * Extracts the non-glob base directory from a glob pattern.
+ * Replaces fast-glob's generateTasks()[0].base.
+ *
+ * @param {string} pattern - A glob pattern
+ * @returns {string} The static base path, or "." if there is none
+ */
+function getGlobBase(pattern) {
+  const parts = pattern.split("/");
+  const base = [];
+
+  for (const part of parts) {
+    if (isDynamicPattern(part)) {
+      break;
+    }
+
+    base.push(part);
+  }
+
+  return base.join("/") || ".";
+}
 
 // Examples:
 // - ~package
@@ -142,18 +164,15 @@ async function resolveFilename(
     result = await resolveRequests(context, possibleRequests, fileResolver);
   } catch (error) {
     if (isGlob) {
-      const [globTask] = fastGlob.generateTasks(filename);
+      const globBase = getGlobBase(filename);
 
-      if (globTask.base === ".") {
+      if (globBase === ".") {
         throw new Error(
           'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")',
         );
       }
 
-      const possibleGlobRequests = getPossibleRequests(
-        loaderContext,
-        globTask.base,
-      );
+      const possibleGlobRequests = getPossibleRequests(loaderContext, globBase);
 
       const globResult = await resolveRequests(
         context,
@@ -164,11 +183,11 @@ async function resolveFilename(
       loaderContext.addContextDependency(globResult);
 
       const patterns = filename.replace(
-        new RegExp(`^${globTask.base}`),
+        new RegExp(`^${globBase}`),
         normalizePath(globResult),
       );
 
-      const paths = await fastGlob(patterns, {
+      const paths = await glob([patterns], {
         absolute: true,
         cwd: globResult,
       });
@@ -256,7 +275,7 @@ async function getDependencies(
         nodePath += ".styl";
       }
 
-      const isGlob = fastGlob.isDynamicPattern(nodePath);
+      const isGlob = isDynamicPattern(nodePath);
 
       let { filename, paths } = this;
 
@@ -272,11 +291,11 @@ async function getDependencies(
       }
 
       if (found && isGlob) {
-        const [globTask] = fastGlob.generateTasks(nodePath);
+        const globBase = getGlobBase(nodePath);
         const context =
-          globTask.base === "."
+          globBase === "."
             ? path.dirname(filename)
-            : path.join(path.dirname(filename), globTask.base);
+            : path.join(path.dirname(filename), globBase);
 
         loaderContext.addContextDependency(context);
       }
@@ -419,7 +438,7 @@ async function createEvaluator(loaderContext, code, options) {
     preferRelative: true,
   });
 
-  // Get cwd for `fastGlob()`
+  // Get cwd for glob resolution
   // No need extra options, because they do not used when `resolveToContext` is `true`
   const globResolve = loaderContext.getResolve({
     conditionNames: ["styl", "stylus", "style", "..."],
@@ -445,7 +464,7 @@ async function createEvaluator(loaderContext, code, options) {
   const optionsImports = [];
 
   for (const importPath of options.imports) {
-    const isGlob = fastGlob.isDynamicPattern(importPath);
+    const isGlob = isDynamicPattern(importPath);
 
     optionsImports.push({
       importPath,
@@ -569,7 +588,7 @@ async function createEvaluator(loaderContext, code, options) {
 
           if (!Array.isArray(resolved)) {
             // Avoid re globbing when resolved import contains glob characters
-            node.string = fastGlob.escapePath(resolved);
+            node.string = escapePath(resolved);
           } else if (resolved.length > 0) {
             let hasError = false;
 
@@ -578,7 +597,7 @@ async function createEvaluator(loaderContext, code, options) {
               const clonedNode = this.visit(clonedImported.path).first;
 
               // Avoid re globbing when resolved import contains glob characters
-              clonedNode.string = fastGlob.escapePath(item);
+              clonedNode.string = escapePath(item);
 
               let result;
 
