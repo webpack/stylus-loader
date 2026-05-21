@@ -28,7 +28,6 @@
     "plusplus",
     "FOUC",
     "sourcemaps",
-    "commitlint",
     "changesets",
     "changeset"
   ],
