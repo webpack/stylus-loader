@@ -28,7 +28,9 @@
     "plusplus",
     "FOUC",
     "sourcemaps",
-    "commitlint"
+    "commitlint",
+    "changesets",
+    "changeset"
   ],
 
   "ignorePaths": [
