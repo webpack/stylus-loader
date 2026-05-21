@@ -1,42 +1,35 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`"additionalData" option should as a function: css 1`] = `
-"/* RelativePath: additional-data.styl; */
-body {
-  color: #ff7f50;
-}
-.custom-class {
-  background: #808080;
-}
-"
+exports[`\"additionalData\" option > should as a function 1`] = `
+"/* RelativePath: additional-data.styl; */\\nbody {\\n  color: #ff7f50;\\n}\\n.custom-class {\\n  background: #808080;\\n}\\n"
 `;
 
-exports[`"additionalData" option should as a function: errors 1`] = `[]`;
-
-exports[`"additionalData" option should as a function: warnings 1`] = `[]`;
-
-exports[`"additionalData" option should as an async function: css 1`] = `
-"/* RelativePath: additional-data.styl; */
-body {
-  color: #ff7f50;
-}
-.custom-class {
-  background: #808080;
-}
-"
+exports[`\"additionalData\" option > should as a function 2`] = `
+[]
 `;
 
-exports[`"additionalData" option should as an async function: errors 1`] = `[]`;
-
-exports[`"additionalData" option should as an async function: warnings 1`] = `[]`;
-
-exports[`"additionalData" option should work as a string: css 1`] = `
-"body {
-  color: #ff7f50;
-}
-"
+exports[`\"additionalData\" option > should as a function 3`] = `
+[]
 `;
 
-exports[`"additionalData" option should work as a string: errors 1`] = `[]`;
+exports[`\"additionalData\" option > should as an async function 1`] = `
+"/* RelativePath: additional-data.styl; */\\nbody {\\n  color: #ff7f50;\\n}\\n.custom-class {\\n  background: #808080;\\n}\\n"
+`;
 
-exports[`"additionalData" option should work as a string: warnings 1`] = `[]`;
+exports[`\"additionalData\" option > should as an async function 2`] = `
+[]
+`;
+
+exports[`\"additionalData\" option > should as an async function 3`] = `
+[]
+`;
+
+exports[`\"additionalData\" option > should work as a string 1`] = `
+"body {\\n  color: #ff7f50;\\n}\\n"
+`;
+
+exports[`\"additionalData\" option > should work as a string 2`] = `
+[]
+`;
+
+exports[`\"additionalData\" option > should work as a string 3`] = `
+[]
+`;

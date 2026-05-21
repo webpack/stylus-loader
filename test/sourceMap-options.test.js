@@ -1,5 +1,8 @@
+import assert from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
+import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   compile,
@@ -8,12 +11,12 @@ import {
   getCompiler,
   getErrors,
   getWarnings,
-} from "./helpers";
+} from "./helpers/index.js";
 
-jest.setTimeout(10000);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('"sourceMap" options', () => {
-  it('should generate source maps when value is "true"', async () => {
+  it('should generate source maps when value is "true"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(testId, {
       sourceMap: true,
@@ -27,9 +30,12 @@ describe('"sourceMap" options', () => {
 
     map.sourceRoot = "";
     map.sources = map.sources.map((source) => {
-      expect(path.isAbsolute(source)).toBe(true);
-      expect(source).toBe(path.normalize(source));
-      expect(fs.existsSync(path.resolve(map.sourceRoot, source))).toBe(true);
+      assert.strictEqual(path.isAbsolute(source), true);
+      assert.strictEqual(source, path.normalize(source));
+      assert.strictEqual(
+        fs.existsSync(path.resolve(map.sourceRoot, source)),
+        true,
+      );
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
@@ -42,14 +48,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toMatchSnapshot("source map");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    t.assert.snapshot(map);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should generate source maps when the "devtool" value is "source-map"', async () => {
+  it('should generate source maps when the "devtool" value is "source-map"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(
       testId,
@@ -68,9 +74,12 @@ describe('"sourceMap" options', () => {
 
     map.sourceRoot = "";
     map.sources = map.sources.map((source) => {
-      expect(path.isAbsolute(source)).toBe(true);
-      expect(source).toBe(path.normalize(source));
-      expect(fs.existsSync(path.resolve(map.sourceRoot, source))).toBe(true);
+      assert.strictEqual(path.isAbsolute(source), true);
+      assert.strictEqual(source, path.normalize(source));
+      assert.strictEqual(
+        fs.existsSync(path.resolve(map.sourceRoot, source)),
+        true,
+      );
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
@@ -83,14 +92,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toMatchSnapshot("source map");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    t.assert.snapshot(map);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should generate source maps when value is "true" and the "devtool" value is "false"', async () => {
+  it('should generate source maps when value is "true" and the "devtool" value is "false"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(
       testId,
@@ -110,9 +119,12 @@ describe('"sourceMap" options', () => {
 
     map.sourceRoot = "";
     map.sources = map.sources.map((source) => {
-      expect(path.isAbsolute(source)).toBe(true);
-      expect(source).toBe(path.normalize(source));
-      expect(fs.existsSync(path.resolve(map.sourceRoot, source))).toBe(true);
+      assert.strictEqual(path.isAbsolute(source), true);
+      assert.strictEqual(source, path.normalize(source));
+      assert.strictEqual(
+        fs.existsSync(path.resolve(map.sourceRoot, source)),
+        true,
+      );
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
@@ -124,14 +136,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toMatchSnapshot("source map");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    t.assert.snapshot(map);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should not generate source maps when value is "false"', async () => {
+  it('should not generate source maps when value is "false"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(testId, {
       sourceMap: false,
@@ -148,14 +160,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toBeUndefined();
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    assert.strictEqual(map, undefined);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should not generate source maps when the "devtool" value is "false"', async () => {
+  it('should not generate source maps when the "devtool" value is "false"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(
       testId,
@@ -177,14 +189,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toBeUndefined();
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    assert.strictEqual(map, undefined);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should not generate source maps when value is "false" and the "devtool" value is "source-map"', async () => {
+  it('should not generate source maps when value is "false" and the "devtool" value is "source-map"', async (t) => {
     const testId = "./source-map.styl";
     const compiler = getCompiler(
       testId,
@@ -207,14 +219,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toBeUndefined();
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    assert.strictEqual(map, undefined);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should generate nested source maps when value is "true"', async () => {
+  it('should generate nested source maps when value is "true"', async (t) => {
     const testId = "./source-map/index.styl";
     const compiler = getCompiler(testId, {
       sourceMap: true,
@@ -228,9 +240,12 @@ describe('"sourceMap" options', () => {
 
     map.sourceRoot = "";
     map.sources = map.sources.map((source) => {
-      expect(path.isAbsolute(source)).toBe(true);
-      expect(source).toBe(path.normalize(source));
-      expect(fs.existsSync(path.resolve(map.sourceRoot, source))).toBe(true);
+      assert.strictEqual(path.isAbsolute(source), true);
+      assert.strictEqual(source, path.normalize(source));
+      assert.strictEqual(
+        fs.existsSync(path.resolve(map.sourceRoot, source)),
+        true,
+      );
 
       return path
         .relative(path.resolve(__dirname, ".."), source)
@@ -243,14 +258,14 @@ describe('"sourceMap" options', () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(css).toMatchSnapshot("css");
-    expect(map).toMatchSnapshot("source map");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(css);
+    t.assert.snapshot(map);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work and allow to override source maps options", async () => {
+  it("should work and allow to override source maps options", async (t) => {
     const testId = "./basic.styl";
     const stylusOptions = {
       sourcemap: {
@@ -263,9 +278,9 @@ describe('"sourceMap" options', () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, { stylusOptions });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 });

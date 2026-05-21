@@ -4,5 +4,8 @@ import configs from "eslint-config-webpack/configs.js";
 export default defineConfig([
   {
     extends: [configs["recommended-dirty"]],
+    languageOptions: {
+      ecmaVersion: 2026,
+    },
   },
 ]);

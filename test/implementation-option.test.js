@@ -1,6 +1,6 @@
-/**
- * @jest-environment node
- */
+import assert from "node:assert";
+import { createRequire } from "node:module";
+import { describe, it } from "node:test";
 
 import {
   compile,
@@ -9,12 +9,12 @@ import {
   getCompiler,
   getErrors,
   getWarnings,
-} from "./helpers";
+} from "./helpers/index.js";
 
-jest.setTimeout(30000);
+const require = createRequire(import.meta.url);
 
 describe("implementation option", () => {
-  it("should work", async () => {
+  it("should work", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       implementation: require("stylus"),
@@ -23,13 +23,13 @@ describe("implementation option", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work when implementation option is string", async () => {
+  it("should work when implementation option is string", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       implementation: require.resolve("stylus"),
@@ -38,20 +38,20 @@ describe("implementation option", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should throw error when unresolved package", async () => {
+  it("should throw error when unresolved package", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       implementation: "unresolved",
     });
     const stats = await compile(compiler);
 
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 });

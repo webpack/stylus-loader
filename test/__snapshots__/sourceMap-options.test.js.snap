@@ -1,307 +1,171 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`"sourceMap" options should generate nested source maps when value is "true": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
+exports[`\"sourceMap\" options > should generate nested source maps when value is \"true\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
 `;
 
-exports[`"sourceMap" options should generate nested source maps when value is "true": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should generate nested source maps when value is "true": source map 1`] = `
+exports[`\"sourceMap\" options > should generate nested source maps when value is \"true\" 2`] = `
 {
-  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
-  "names": [],
-  "sourceRoot": "",
+  "version": 3,
   "sources": [
     "test/fixtures/paths/in-paths.styl",
     "test/fixtures/basic.styl",
-    "test/fixtures/source-map/index.styl",
+    "test/fixtures/source-map/index.styl"
   ],
-  "sourcesContent": [
-    ".other
-	font-family serif",
-    "border-radius()
-  -webkit-border-radius arguments
-  -moz-border-radius arguments
-  border-radius arguments
-
-body
-  font 12px Helvetica, Arial, sans-serif
-
-a.button
-  border-radius 5px",
-    "@import 'in-paths'
-@import '../basic'
-
-.some-class
-  margin: 10px
-",
-  ],
-  "version": 3,
-}
-`;
-
-exports[`"sourceMap" options should generate nested source maps when value is "true": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when the "devtool" value is "source-map": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
-`;
-
-exports[`"sourceMap" options should generate source maps when the "devtool" value is "source-map": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when the "devtool" value is "source-map": source map 1`] = `
-{
-  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "names": [],
+  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "sourceRoot": "",
+  "sourcesContent": [
+    ".other\\n\\tfont-family serif",
+    "border-radius()\\n  -webkit-border-radius arguments\\n  -moz-border-radius arguments\\n  border-radius arguments\\n\\nbody\\n  font 12px Helvetica, Arial, sans-serif\\n\\na.button\\n  border-radius 5px",
+    "@import 'in-paths'\\n@import '../basic'\\n\\n.some-class\\n  margin: 10px\\n"
+  ]
+}
+`;
+
+exports[`\"sourceMap\" options > should generate nested source maps when value is \"true\" 3`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate nested source maps when value is \"true\" 4`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when the \"devtool\" value is \"source-map\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when the \"devtool\" value is \"source-map\" 2`] = `
+{
+  "version": 3,
   "sources": [
     "test/fixtures/paths/in-paths.styl",
     "test/fixtures/basic.styl",
-    "test/fixtures/source-map.styl",
+    "test/fixtures/source-map.styl"
   ],
-  "sourcesContent": [
-    ".other
-	font-family serif",
-    "border-radius()
-  -webkit-border-radius arguments
-  -moz-border-radius arguments
-  border-radius arguments
-
-body
-  font 12px Helvetica, Arial, sans-serif
-
-a.button
-  border-radius 5px",
-    "@import 'in-paths'
-@import 'basic'
-
-.some-class
-  margin: 10px
-",
-  ],
-  "version": 3,
-}
-`;
-
-exports[`"sourceMap" options should generate source maps when the "devtool" value is "source-map": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when value is "true" and the "devtool" value is "false": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
-`;
-
-exports[`"sourceMap" options should generate source maps when value is "true" and the "devtool" value is "false": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when value is "true" and the "devtool" value is "false": source map 1`] = `
-{
-  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "names": [],
+  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "sourceRoot": "",
+  "sourcesContent": [
+    ".other\\n\\tfont-family serif",
+    "border-radius()\\n  -webkit-border-radius arguments\\n  -moz-border-radius arguments\\n  border-radius arguments\\n\\nbody\\n  font 12px Helvetica, Arial, sans-serif\\n\\na.button\\n  border-radius 5px",
+    "@import 'in-paths'\\n@import 'basic'\\n\\n.some-class\\n  margin: 10px\\n"
+  ]
+}
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when the \"devtool\" value is \"source-map\" 3`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when the \"devtool\" value is \"source-map\" 4`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" 2`] = `
+{
+  "version": 3,
   "sources": [
     "test/fixtures/paths/in-paths.styl",
     "test/fixtures/basic.styl",
-    "test/fixtures/source-map.styl",
+    "test/fixtures/source-map.styl"
   ],
-  "sourcesContent": [
-    ".other
-	font-family serif",
-    "border-radius()
-  -webkit-border-radius arguments
-  -moz-border-radius arguments
-  border-radius arguments
-
-body
-  font 12px Helvetica, Arial, sans-serif
-
-a.button
-  border-radius 5px",
-    "@import 'in-paths'
-@import 'basic'
-
-.some-class
-  margin: 10px
-",
-  ],
-  "version": 3,
-}
-`;
-
-exports[`"sourceMap" options should generate source maps when value is "true" and the "devtool" value is "false": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when value is "true": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
-`;
-
-exports[`"sourceMap" options should generate source maps when value is "true": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should generate source maps when value is "true": source map 1`] = `
-{
-  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "names": [],
+  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
   "sourceRoot": "",
+  "sourcesContent": [
+    ".other\\n\\tfont-family serif",
+    "border-radius()\\n  -webkit-border-radius arguments\\n  -moz-border-radius arguments\\n  border-radius arguments\\n\\nbody\\n  font 12px Helvetica, Arial, sans-serif\\n\\na.button\\n  border-radius 5px",
+    "@import 'in-paths'\\n@import 'basic'\\n\\n.some-class\\n  margin: 10px\\n"
+  ]
+}
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" 3`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" 4`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" and the \"devtool\" value is \"false\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
+`;
+
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" and the \"devtool\" value is \"false\" 2`] = `
+{
+  "version": 3,
   "sources": [
     "test/fixtures/paths/in-paths.styl",
     "test/fixtures/basic.styl",
-    "test/fixtures/source-map.styl",
+    "test/fixtures/source-map.styl"
   ],
+  "names": [],
+  "mappings": "AAAA;EACC,aAAY,MAAZ;;ACID;EACE,MAAmB,kCAAnB;;AAEF;EAPE,uBAAsB,IAAtB;EACA,oBAAmB,IAAnB;EACA,eAAc,IAAd;;ACAF;EACE,QAAQ,KAAR",
+  "sourceRoot": "",
   "sourcesContent": [
-    ".other
-	font-family serif",
-    "border-radius()
-  -webkit-border-radius arguments
-  -moz-border-radius arguments
-  border-radius arguments
-
-body
-  font 12px Helvetica, Arial, sans-serif
-
-a.button
-  border-radius 5px",
-    "@import 'in-paths'
-@import 'basic'
-
-.some-class
-  margin: 10px
-",
-  ],
-  "version": 3,
+    ".other\\n\\tfont-family serif",
+    "border-radius()\\n  -webkit-border-radius arguments\\n  -moz-border-radius arguments\\n  border-radius arguments\\n\\nbody\\n  font 12px Helvetica, Arial, sans-serif\\n\\na.button\\n  border-radius 5px",
+    "@import 'in-paths'\\n@import 'basic'\\n\\n.some-class\\n  margin: 10px\\n"
+  ]
 }
 `;
 
-exports[`"sourceMap" options should generate source maps when value is "true": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when the "devtool" value is "false": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" and the \"devtool\" value is \"false\" 3`] = `
+[]
 `;
 
-exports[`"sourceMap" options should not generate source maps when the "devtool" value is "false": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when the "devtool" value is "false": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when value is "false" and the "devtool" value is "source-map": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
+exports[`\"sourceMap\" options > should generate source maps when value is \"true\" and the \"devtool\" value is \"false\" 4`] = `
+[]
 `;
 
-exports[`"sourceMap" options should not generate source maps when value is "false" and the "devtool" value is "source-map": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when value is "false" and the "devtool" value is "source-map": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when value is "false": css 1`] = `
-".other {
-  font-family: serif;
-}
-body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.some-class {
-  margin: 10px;
-}
-"
+exports[`\"sourceMap\" options > should not generate source maps when the \"devtool\" value is \"false\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
 `;
 
-exports[`"sourceMap" options should not generate source maps when value is "false": errors 1`] = `[]`;
-
-exports[`"sourceMap" options should not generate source maps when value is "false": warnings 1`] = `[]`;
-
-exports[`"sourceMap" options should work and allow to override source maps options: css 1`] = `
-"body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImJhc2ljLnN0eWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBS0E7RUFDRSxNQUFtQixrQ0FBbkI7O0FBRUY7RUFQRSx1QkFBc0IsSUFBdEI7RUFDQSxvQkFBbUIsSUFBbkI7RUFDQSxlQUFjLElBQWQiLCJmaWxlIjoiYmFzaWMuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiYm9yZGVyLXJhZGl1cygpXG4gIC13ZWJraXQtYm9yZGVyLXJhZGl1cyBhcmd1bWVudHNcbiAgLW1vei1ib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuICBib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuXG5ib2R5XG4gIGZvbnQgMTJweCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmXG5cbmEuYnV0dG9uXG4gIGJvcmRlci1yYWRpdXMgNXB4Il19 */"
+exports[`\"sourceMap\" options > should not generate source maps when the \"devtool\" value is \"false\" 2`] = `
+[]
 `;
 
-exports[`"sourceMap" options should work and allow to override source maps options: errors 1`] = `[]`;
+exports[`\"sourceMap\" options > should not generate source maps when the \"devtool\" value is \"false\" 3`] = `
+[]
+`;
 
-exports[`"sourceMap" options should work and allow to override source maps options: warnings 1`] = `[]`;
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
+`;
+
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" 2`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" 3`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" and the \"devtool\" value is \"source-map\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n.some-class {\\n  margin: 10px;\\n}\\n"
+`;
+
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" and the \"devtool\" value is \"source-map\" 2`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should not generate source maps when value is \"false\" and the \"devtool\" value is \"source-map\" 3`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should work and allow to override source maps options 1`] = `
+"body {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImJhc2ljLnN0eWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBS0E7RUFDRSxNQUFtQixrQ0FBbkI7O0FBRUY7RUFQRSx1QkFBc0IsSUFBdEI7RUFDQSxvQkFBbUIsSUFBbkI7RUFDQSxlQUFjLElBQWQiLCJmaWxlIjoiYmFzaWMuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiYm9yZGVyLXJhZGl1cygpXG4gIC13ZWJraXQtYm9yZGVyLXJhZGl1cyBhcmd1bWVudHNcbiAgLW1vei1ib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuICBib3JkZXItcmFkaXVzIGFyZ3VtZW50c1xuXG5ib2R5XG4gIGZvbnQgMTJweCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmXG5cbmEuYnV0dG9uXG4gIGJvcmRlci1yYWRpdXMgNXB4Il19 */"
+`;
+
+exports[`\"sourceMap\" options > should work and allow to override source maps options 2`] = `
+[]
+`;
+
+exports[`\"sourceMap\" options > should work and allow to override source maps options 3`] = `
+[]
+`;

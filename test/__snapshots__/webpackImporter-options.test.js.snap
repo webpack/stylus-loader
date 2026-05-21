@@ -1,49 +1,45 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+exports[`webpackImporter option > should throw an error on webpack import when value is \"false\" 1`] = `
+[]
+`;
 
-exports[`webpackImporter option should throw an error on webpack import when value is "false": errors 1`] = `
+exports[`webpackImporter option > should throw an error on webpack import when value is \"false\" 2`] = `
 [
-  "ModuleBuildError: Module build failed (from \`replaced original path\`):
-/test/fixtures/import-webpack.styl:1:9",
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):\\n/test/fixtures/import-webpack.styl:1:9"
 ]
 `;
 
-exports[`webpackImporter option should throw an error on webpack import when value is "false": warnings 1`] = `[]`;
-
-exports[`webpackImporter option should work when value is "false": css 1`] = `
-".other {
-  font-family: serif;
-}
-"
+exports[`webpackImporter option > should work when value is \"false\" 1`] = `
+".other {\\n  font-family: serif;\\n}\\n"
 `;
 
-exports[`webpackImporter option should work when value is "false": errors 1`] = `[]`;
-
-exports[`webpackImporter option should work when value is "false": warnings 1`] = `[]`;
-
-exports[`webpackImporter option should work when value is "true": css 1`] = `
-".imported-in-web-modules {
-  font-size: 2em;
-}
-.imported-in-web-modules {
-  font-size: 2em;
-}
-"
+exports[`webpackImporter option > should work when value is \"false\" 2`] = `
+[]
 `;
 
-exports[`webpackImporter option should work when value is "true": errors 1`] = `[]`;
-
-exports[`webpackImporter option should work when value is "true": warnings 1`] = `[]`;
-
-exports[`webpackImporter option should work when value is not specify: css 1`] = `
-".imported-in-web-modules {
-  font-size: 2em;
-}
-.imported-in-web-modules {
-  font-size: 2em;
-}
-"
+exports[`webpackImporter option > should work when value is \"false\" 3`] = `
+[]
 `;
 
-exports[`webpackImporter option should work when value is not specify: errors 1`] = `[]`;
+exports[`webpackImporter option > should work when value is \"true\" 1`] = `
+".imported-in-web-modules {\\n  font-size: 2em;\\n}\\n.imported-in-web-modules {\\n  font-size: 2em;\\n}\\n"
+`;
 
-exports[`webpackImporter option should work when value is not specify: warnings 1`] = `[]`;
+exports[`webpackImporter option > should work when value is \"true\" 2`] = `
+[]
+`;
+
+exports[`webpackImporter option > should work when value is \"true\" 3`] = `
+[]
+`;
+
+exports[`webpackImporter option > should work when value is not specify 1`] = `
+".imported-in-web-modules {\\n  font-size: 2em;\\n}\\n.imported-in-web-modules {\\n  font-size: 2em;\\n}\\n"
+`;
+
+exports[`webpackImporter option > should work when value is not specify 2`] = `
+[]
+`;
+
+exports[`webpackImporter option > should work when value is not specify 3`] = `
+[]
+`;
