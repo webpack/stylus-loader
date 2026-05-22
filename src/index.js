@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import schema from "./options.json";
+import schema from "./options.json" with { type: "json" };
 import {
   createEvaluator,
   getStylusImplementation,
@@ -8,7 +8,7 @@ import {
   normalizeSourceMap,
   readFile,
   urlResolver,
-} from "./utils";
+} from "./utils.js";
 
 export default async function stylusLoader(source) {
   const options = this.getOptions(schema);
@@ -17,7 +17,10 @@ export default async function stylusLoader(source) {
   let implementation;
 
   try {
-    implementation = getStylusImplementation(this, options.implementation);
+    implementation = await getStylusImplementation(
+      this,
+      options.implementation,
+    );
   } catch (error) {
     callback(error);
 
@@ -46,7 +49,7 @@ export default async function stylusLoader(source) {
   let stylusOptions;
 
   try {
-    stylusOptions = getStylusOptions(this, options);
+    stylusOptions = await getStylusOptions(this, options);
   } catch (err) {
     callback(err);
     return;

@@ -1,42 +1,33 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+exports[`implementation option > should throw error when unresolved package 1`] = `
+[]
+`;
 
-exports[`implementation option should throw error when unresolved package: errors 1`] = `
+exports[`implementation option > should throw error when unresolved package 2`] = `
 [
-  "ModuleBuildError: Module build failed (from \`replaced original path\`):
-NonErrorEmittedError: (Emitted value instead of an instance of Error) Error: Cannot find module 'unresolved' from 'src/utils.js'",
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):\\nError [ERR_MODULE_NOT_FOUND]: Cannot find package 'unresolved' imported from /src/utils.js"
 ]
 `;
 
-exports[`implementation option should throw error when unresolved package: warnings 1`] = `[]`;
-
-exports[`implementation option should work when implementation option is string: css 1`] = `
-"body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
+exports[`implementation option > should work 1`] = `
+"body {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n"
 `;
 
-exports[`implementation option should work when implementation option is string: errors 1`] = `[]`;
-
-exports[`implementation option should work when implementation option is string: warnings 1`] = `[]`;
-
-exports[`implementation option should work: css 1`] = `
-"body {
-  font: 12px Helvetica, Arial, sans-serif;
-}
-a.button {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-"
+exports[`implementation option > should work 2`] = `
+[]
 `;
 
-exports[`implementation option should work: errors 1`] = `[]`;
+exports[`implementation option > should work 3`] = `
+[]
+`;
 
-exports[`implementation option should work: warnings 1`] = `[]`;
+exports[`implementation option > should work when implementation option is string 1`] = `
+"body {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n"
+`;
+
+exports[`implementation option > should work when implementation option is string 2`] = `
+[]
+`;
+
+exports[`implementation option > should work when implementation option is string 3`] = `
+[]
+`;

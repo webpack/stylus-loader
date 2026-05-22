@@ -1,4 +1,7 @@
+import assert from "node:assert";
 import path from "node:path";
+import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   compile,
@@ -7,12 +10,12 @@ import {
   getCompiler,
   getErrors,
   getWarnings,
-} from "./helpers";
+} from "./helpers/index.js";
 
-jest.setTimeout(10000);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("webpackImporter option", () => {
-  it("should work when value is not specify", async () => {
+  it("should work when value is not specify", async (t) => {
     const testId = "./import-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -27,13 +30,13 @@ describe("webpackImporter option", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work when value is "true"', async () => {
+  it('should work when value is "true"', async (t) => {
     const testId = "./import-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -50,13 +53,13 @@ describe("webpackImporter option", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work when value is "false"', async () => {
+  it('should work when value is "false"', async (t) => {
     const testId = "./shallow-paths.styl";
     const compiler = getCompiler(testId, {
       webpackImporter: false,
@@ -72,13 +75,13 @@ describe("webpackImporter option", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should throw an error on webpack import when value is "false"', async () => {
+  it('should throw an error on webpack import when value is "false"', async (t) => {
     const testId = "./import-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -93,12 +96,13 @@ describe("webpackImporter option", () => {
     );
     const stats = await compile(compiler);
 
-    await expect(
+    await assert.rejects(
       getCodeFromStylus(testId, {
         stylusOptions: { shouldUseWebpackImporter: false },
       }),
-    ).rejects.toThrow("failed to locate @import file ~in-web-modules.styl");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+      /failed to locate @import file ~in-web-modules\.styl/,
+    );
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 });

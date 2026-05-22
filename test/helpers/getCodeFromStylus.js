@@ -1,8 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import stylus from "stylus";
-import Evaluator from "stylus/lib/visitor/evaluator";
+import Evaluator from "stylus/lib/visitor/evaluator.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const fixturesDir = path.resolve(__dirname, "..", "fixtures");
 const pathMap = {

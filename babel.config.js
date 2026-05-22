@@ -1,19 +1,30 @@
 const MIN_BABEL_VERSION = 7;
 
-module.exports = (api) => {
+export default (api) => {
   api.assertVersion(MIN_BABEL_VERSION);
-  api.cache(true);
+
+  const env = api.env();
+  const isCjs = env === "cjs";
 
   return {
     presets: [
       [
         "@babel/preset-env",
         {
-          targets: {
-            node: "18.12.0",
-          },
+          targets: { node: "22.11.0" },
+          modules: false,
         },
       ],
     ],
+    plugins: isCjs
+      ? [
+          [
+            "@babel/plugin-transform-modules-commonjs",
+            {
+              ignoreDynamicImport: true,
+            },
+          ],
+        ]
+      : [],
   };
 };

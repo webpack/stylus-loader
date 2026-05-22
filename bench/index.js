@@ -1,11 +1,15 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const Benchmark = require("benchmark");
-const { Volume, createFsFromVolume } = require("memfs");
-const stylus = require("stylus");
-const webpack = require("webpack");
+import fs from "node:fs";
+import path from "node:path";
+import url from "node:url";
+import Benchmark from "benchmark";
+import { Volume, createFsFromVolume } from "memfs";
+import stylus from "stylus";
+import webpack from "webpack";
 
-const importWebpackConfig = require("./fixtures/imports/webpack.config");
+import importWebpackConfig from "./fixtures/imports/webpack.config.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function resolveOnComplete(fn) {
   return (...args) => {

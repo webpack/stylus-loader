@@ -1,9 +1,9 @@
-/**
- * @jest-environment node
- */
-
+import assert from "node:assert";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
+import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   compile,
@@ -13,38 +13,39 @@ import {
   getErrors,
   getWarnings,
   validateDependencies,
-} from "./helpers";
+} from "./helpers/index.js";
 
-jest.setTimeout(30000);
+const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("loader", () => {
-  it("should work", async () => {
+  it("should work", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("shouldn't import css", async () => {
+  it("shouldn't import css", async (t) => {
     const testId = "./import-css.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should import css", async () => {
+  it("should import css", async (t) => {
     const testId = "./import-css.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -59,52 +60,52 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should import stylus", async () => {
+  it("should import stylus", async (t) => {
     const testId = "./import-styl.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should import stylus from process.cwd", async () => {
+  it("should import stylus from process.cwd", async (t) => {
     const testId = "./import-cwd.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("shouldn't process urls", async () => {
+  it("shouldn't process urls", async (t) => {
     const testId = "./urls.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work when stylusOptions is function", async () => {
+  it("should work when stylusOptions is function", async (t) => {
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -132,13 +133,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with option, should resolve urls relatively", async () => {
+  it("with option, should resolve urls relatively", async (t) => {
     const testId = "./shallow-deep.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -155,13 +156,13 @@ describe("loader", () => {
     //   },
     // });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with option, should resolve urls relatively with loader inline syntax", async () => {
+  it("with option, should resolve urls relatively with loader inline syntax", async (t) => {
     const testId = "./shallow-deep-webpack.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -173,13 +174,13 @@ describe("loader", () => {
     // const codeFromStylus = await getCodeFromStylus(testId);
 
     // Stylus url-resolver does not work with loader inline syntax
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with option, should not resolve urls relatively", async () => {
+  it("with option, should not resolve urls relatively", async (t) => {
     const testId = "./shallow-deep-webpack.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -194,15 +195,15 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
   // TODO - stylus has a bug on windows
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async () => {
+
+  it.skip('with option resolveURL nocheck is "false", should not resolve missing urls relatively', async (t) => {
     const testId = "./shallow-deep.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -219,13 +220,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with option, should resolve urls relatively when literal", async () => {
+  it("with option, should resolve urls relatively when literal", async (t) => {
     const testId = "./shallow-deep-literal.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -241,13 +242,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('with option, should resolve urls relatively when is set "dest"', async () => {
+  it('with option, should resolve urls relatively when is set "dest"', async (t) => {
     const testId = "./shallow-deep-literal.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -264,13 +265,13 @@ describe("loader", () => {
     //   },
     // });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with paths, find deps and load like normal stylus", async () => {
+  it("with paths, find deps and load like normal stylus", async (t) => {
     const testId = "./import-paths.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -285,26 +286,26 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("stylus can find modules in node_modules", async () => {
+  it("stylus can find modules in node_modules", async (t) => {
     const testId = "./import-fakenib.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("resolve with webpack if stylus can't find it", async () => {
+  it("resolve with webpack if stylus can't find it", async (t) => {
     const testId = "./import-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -319,13 +320,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("resolve prefer-relative with webpack", async () => {
+  it("resolve prefer-relative with webpack", async (t) => {
     const testId = "./import-webpack-prefer-relative.styl";
     const compiler = getCompiler(
       testId,
@@ -342,13 +343,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("in a nested import load module from paths", async () => {
+  it("in a nested import load module from paths", async (t) => {
     const testId = "./shallow-paths.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -363,13 +364,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work indented import", async () => {
+  it("should work indented import", async (t) => {
     const testId = "./shallow-indent.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -389,16 +390,16 @@ describe("loader", () => {
     ];
 
     for (const fixture of fixtures) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work binop import", async () => {
+  it("should work binop import", async (t) => {
     const testId = "./import-binop.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -416,29 +417,29 @@ describe("loader", () => {
     ];
 
     for (const fixture of fixtures) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("in a nested import load module from node_modules", async () => {
+  it("in a nested import load module from node_modules", async (t) => {
     const testId = "./shallow-fakenib.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("in a nested import load module from webpack", async () => {
+  it("in a nested import load module from webpack", async (t) => {
     const testId = "./shallow-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -453,13 +454,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("in a nested import specified in options", async () => {
+  it("in a nested import specified in options", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
@@ -482,13 +483,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in options with nested glob import", async () => {
+  it("imports files listed in options with nested glob import", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
@@ -514,39 +515,39 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("resolves css with webpack but does not import it", async () => {
+  it("resolves css with webpack but does not import it", async (t) => {
     const testId = "./import-webpack-css.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("resolves broken css with webpack but does not import it", async () => {
+  it("resolves broken css with webpack but does not import it", async (t) => {
     const testId = "./import-webpack-css-keyframe.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "use" option', async () => {
+  it('should work "use" option', async (t) => {
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -567,13 +568,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "use" option #1', async () => {
+  it('should work "use" option #1', async (t) => {
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -594,13 +595,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "use" option as string', async () => {
+  it('should work "use" option as string', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -615,13 +616,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "use" option as Array<string>', async () => {
+  it('should work "use" option as Array<string>', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -636,13 +637,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work with bootstrap", async () => {
+  it("should work with bootstrap", async (t) => {
     const testId = "./lib-bootstrap.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -659,13 +660,13 @@ describe("loader", () => {
     //   },
     // });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work with plugin using bootstrap", async () => {
+  it("should work with plugin using bootstrap", async (t) => {
     const bootstrap = require("bootstrap-styl");
 
     function plugin() {
@@ -692,13 +693,13 @@ describe("loader", () => {
     //   },
     // });
     //
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "define" option', async () => {
+  it('should work "define" option', async (t) => {
     const testId = "./webpack.config-plugin.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -717,13 +718,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "define" option with raw', async () => {
+  it('should work "define" option with raw', async (t) => {
     const testId = "./defineRaw.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -746,39 +747,39 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("correctly compiles mixin calls inside imported files", async () => {
+  it("correctly compiles mixin calls inside imported files", async (t) => {
     const testId = "./import-mixins/index.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should compile an @import URL through the CSS loader", async () => {
+  it("should compile an @import URL through the CSS loader", async (t) => {
     const testId = "./import-google-font.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option argument", async () => {
+  it("imports files listed in option argument", async (t) => {
     const testId = "./stylus.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -794,13 +795,13 @@ describe("loader", () => {
     //   },
     // });
 
-    // expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    // assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option argument stylus paths style", async () => {
+  it("imports files listed in option argument stylus paths style", async (t) => {
     const testId = "./stylus.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -817,13 +818,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option argument webpack style", async () => {
+  it("imports files listed in option argument webpack style", async (t) => {
     const testId = "./stylus.styl";
     const compiler = getCompiler(
       testId,
@@ -846,13 +847,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option argument with tilde", async () => {
+  it("imports files listed in option argument with tilde", async (t) => {
     const testId = "./stylus.styl";
     const compiler = getCompiler(
       testId,
@@ -875,26 +876,26 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('imports files listed in option "style" package.json', async () => {
+  it('imports files listed in option "style" package.json', async (t) => {
     const testId = "./import-fakestylus.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option argument and deps", async () => {
+  it("imports files listed in option argument and deps", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -909,13 +910,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("with paths, find deps with spaces and load like normal stylus", async () => {
+  it("with paths, find deps with spaces and load like normal stylus", async (t) => {
     const testId = "./import-paths space.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -930,13 +931,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "include" option', async () => {
+  it('should work "include" option', async (t) => {
     const testId = "./include-option.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -951,15 +952,15 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
   // TODO - stylus has a bug on windows
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('should work "nib"', async () => {
+
+  it.skip('should work "nib"', async (t) => {
     const testId = "./basic-nib.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -976,13 +977,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob with deps", async () => {
+  it("imports files listed in glob with deps", async (t) => {
     const testId = "./import-glob.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1004,7 +1005,7 @@ describe("loader", () => {
       path.resolve(fixturesDir, "glob-files", "dir", "a.styl"),
       path.resolve(fixturesDir, "glob-files", "dir", "b.styl"),
     ]) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
     for (const fixture of [
@@ -1012,16 +1013,16 @@ describe("loader", () => {
       path.resolve(fixturesDir, "glob"),
       path.resolve(fixturesDir, "glob-files"),
     ]) {
-      expect(contextDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(contextDependencies.has(fixture), true);
     }
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files with special characters listed in glob", async () => {
+  it("imports files with special characters listed in glob", async (t) => {
     const testId = "./import-glob-special.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1029,13 +1030,13 @@ describe("loader", () => {
     const codeFromStylus = await getCodeFromStylus(testId);
 
     // Support characters that it supports native stylus
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob with webpack import with deps", async () => {
+  it("imports files listed in glob with webpack import with deps", async (t) => {
     const testId = "./import-glob-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -1072,7 +1073,7 @@ describe("loader", () => {
       path.resolve(fixturesDir, "node_modules", "glob_package", "b.styl"),
       path.resolve(fixturesDir, "node_modules", "glob_package", "index.styl"),
     ]) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
     for (const fixture of [
@@ -1081,16 +1082,16 @@ describe("loader", () => {
       path.resolve(fixturesDir, "glob-webpack-2"),
       path.resolve(fixturesDir, "node_modules", "glob_package"),
     ]) {
-      expect(contextDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(contextDependencies.has(fixture), true);
     }
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob **/* with deps", async () => {
+  it("imports files listed in glob **/* with deps", async (t) => {
     const testId = "./import-glob-all.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1112,16 +1113,16 @@ describe("loader", () => {
     ];
 
     for (const fixture of fixtures) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob with webpack import 2", async () => {
+  it("imports files listed in glob with webpack import 2", async (t) => {
     const testId = "./import-glob-webpack-2.styl";
     const compiler = getCompiler(
       testId,
@@ -1139,35 +1140,35 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports unsupported webpack", async () => {
+  it("imports unsupported webpack", async (t) => {
     const testId = "./import-webpack-unsupported.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in nested glob import", async () => {
+  it("imports files listed in nested glob import", async (t) => {
     const testId = "./import-glob-nested.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in nested glob with webpack import", async () => {
+  it("imports files listed in nested glob with webpack import", async (t) => {
     const testId = "./import-glob-webpack-nested.styl";
     const compiler = getCompiler(
       testId,
@@ -1184,51 +1185,51 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when imports files listed as glob in empty directory", async () => {
+  it("should emit error when imports files listed as glob in empty directory", async (t) => {
     const testId = "./import-glob-empty-dir.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "failed to locate @import file empty-dir/*.styl",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("failed to locate @import file empty-dir/*.styl"),
     );
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob import package", async () => {
+  it("imports files listed in glob import package", async (t) => {
     const testId = "./import-glob-package.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in glob import package through webpack", async () => {
+  it("imports files listed in glob import package through webpack", async (t) => {
     const testId = "./import-glob-webpack-package.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files in dir like a glob", async () => {
+  it("imports files in dir like a glob", async (t) => {
     const rootdir = path.resolve(__dirname, "fixtures", "node_modules");
     const exampleDir = path.resolve(rootdir, "example-like-a-glob");
     const pathDir =
@@ -1254,13 +1255,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option as glob", async () => {
+  it("imports files listed in option as glob", async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1275,13 +1276,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports files listed in option as glob with webpack import", async () => {
+  it("imports files listed in option as glob with webpack import", async (t) => {
     const testId = "./import-glob-alias.styl";
     const compiler = getCompiler(
       testId,
@@ -1298,13 +1299,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports and paths deps", async () => {
+  it("imports and paths deps", async (t) => {
     const testId = "./import-paths.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1319,13 +1320,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports and webpack deps", async () => {
+  it("imports and webpack deps", async (t) => {
     const testId = "./import-webpack.styl";
     const compiler = getCompiler(
       testId,
@@ -1340,13 +1341,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports and webpack alias", async () => {
+  it("imports and webpack alias", async (t) => {
     const testId = "./import-webpack-alias.styl";
     const compiler = getCompiler(
       testId,
@@ -1363,13 +1364,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('imports in option "import" and webpack alias', async () => {
+  it('imports in option "import" and webpack alias', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
@@ -1394,26 +1395,26 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("imports the right file based on context", async () => {
+  it("imports the right file based on context", async (t) => {
     const testId = "./context";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should not be resolved when url begin with "#"', async () => {
+  it('should not be resolved when url begin with "#"', async (t) => {
     const testId = "./no-import.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1422,13 +1423,13 @@ describe("loader", () => {
       stylusOptions: { resolveURL: { nocheck: true } },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "hoistAtrules" option', async () => {
+  it('should work "hoistAtrules" option', async (t) => {
     const testId = "./hoist-atrules.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1443,13 +1444,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "prefix" option', async () => {
+  it('should work "prefix" option', async (t) => {
     const testId = "./prefix.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1464,15 +1465,15 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
   // TODO - stylus has a bug on windows
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('should work "lineNumbers" option', async () => {
+
+  it.skip('should work "lineNumbers" option', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1487,18 +1488,18 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(
       codeFromBundle.css
         .replaceAll(process.cwd(), "")
         .replaceAll("\\\\?\\", "")
         .replaceAll("\\", "/"),
-    ).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    );
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work "compress" option', async () => {
+  it('should work "compress" option', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1513,13 +1514,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work compress in "production" mode', async () => {
+  it('should work compress in "production" mode', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(testId, {}, { mode: "production" });
     const stats = await compile(compiler);
@@ -1530,13 +1531,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work and respect the "compress" option with the "true" value', async () => {
+  it('should work and respect the "compress" option with the "true" value', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
@@ -1555,13 +1556,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work and respect the "compress" option with the "false" value', async () => {
+  it('should work and respect the "compress" option with the "false" value', async (t) => {
     const testId = "./basic.styl";
     const compiler = getCompiler(
       testId,
@@ -1580,13 +1581,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should use .json file", async () => {
+  it("should use .json file", async (t) => {
     const testId = "./json/index.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1601,13 +1602,13 @@ describe("loader", () => {
       },
     });
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when unresolved import", async () => {
+  it("should emit error when unresolved import", async (t) => {
     const testId = "./import-unresolve.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
@@ -1619,17 +1620,17 @@ describe("loader", () => {
     const fixtures = [path.resolve(fixturesDir, "import-unresolve.styl")];
 
     for (const fixture of fixtures) {
-      expect(fileDependencies.has(fixture)).toBe(true);
+      assert.strictEqual(fileDependencies.has(fixture), true);
     }
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "failed to locate @import file unresolve.styl",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("failed to locate @import file unresolve.styl"),
     );
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit warning when use unresolved plugin", async () => {
+  it("should emit warning when use unresolved plugin", async (t) => {
     const testId = "./webpack.config-plugin.styl";
     const compiler = getCompiler(testId, {
       stylusOptions: {
@@ -1638,20 +1639,20 @@ describe("loader", () => {
     });
     const stats = await compile(compiler);
 
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when import self", async () => {
+  it("should emit error when import self", async (t) => {
     const testId = "./imports/self.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "failed to locate @import file self.styl",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("failed to locate @import file self.styl"),
     );
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(
       getErrors(stats).map((item) =>
         // Due bug in `node-glob`
         process.platform === "win32"
@@ -1661,71 +1662,73 @@ describe("loader", () => {
             )
           : item,
       ),
-    ).toMatchSnapshot("errors");
+    );
   });
 
-  it("should emit error when import loop", async () => {
+  it("should emit error when import loop", async (t) => {
     const testId = "./import-recursive.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow("Not found");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("Not found"),
+    );
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when parse error", async () => {
+  it("should emit error when parse error", async (t) => {
     const testId = "./parse-error.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      'expected "indent", got "eos"',
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes('expected "indent", got "eos"'),
     );
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when empty import", async () => {
+  it("should emit error when empty import", async (t) => {
     const testId = "./empty-import.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
     const codeFromBundle = getCodeFromBundle(stats, compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "@import string expected",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("@import string expected"),
     );
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should emit error when unresolved import glob", async () => {
+  it("should emit error when unresolved import glob", async (t) => {
     const testId = "./import-unresolve-glob.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "failed to locate @import file unresolve/*.styl",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("failed to locate @import file unresolve/*.styl"),
     );
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should throw an error on circular imports", async () => {
+  it("should throw an error on circular imports", async (t) => {
     const testId = "./circular.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    await expect(getCodeFromStylus(testId)).rejects.toThrow(
-      "failed to locate @import file circular.styl",
+    await assert.rejects(getCodeFromStylus(testId), (err) =>
+      err.message.includes("failed to locate @import file circular.styl"),
     );
 
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work and respect the 'resolve.byDependency.less' option", async () => {
+  it("should work and respect the 'resolve.byDependency.less' option", async (t) => {
     const testId = "./by-dependency.styl";
     const compiler = getCompiler(
       testId,
@@ -1744,13 +1747,13 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId);
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work with a package with "styl" and "exports" fields and a custom condition (theme1)', async () => {
+  it('should work with a package with "styl" and "exports" fields and a custom condition (theme1)', async (t) => {
     const testId = "./import-package-with-exports-and-custom-condition.styl";
     const compiler = getCompiler(
       testId,
@@ -1771,13 +1774,13 @@ describe("loader", () => {
       },
     );
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it('should work with a package with "styl" and "exports" fields and a custom condition (theme2)', async () => {
+  it('should work with a package with "styl" and "exports" fields and a custom condition (theme2)', async (t) => {
     const testId = "./import-package-with-exports-and-custom-condition.styl";
     const compiler = getCompiler(
       testId,
@@ -1798,22 +1801,22 @@ describe("loader", () => {
       },
     );
 
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should throw an error", async () => {
+  it("should throw an error", async (t) => {
     const testId = "./broken.styl";
     const compiler = getCompiler(testId);
     const stats = await compile(compiler);
 
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 
-  it("should work and don't override loader options", async () => {
+  it("should work and don't override loader options", async (t) => {
     const testId = "./basic.styl";
     const stylusOptions = {
       compress: false,
@@ -1834,7 +1837,7 @@ describe("loader", () => {
     const codeFromBundle = getCodeFromBundle(stats, compiler);
     const codeFromStylus = await getCodeFromStylus(testId, { stylusOptions });
 
-    expect(stylusOptions).toEqual({
+    assert.deepStrictEqual(stylusOptions, {
       compress: false,
       resolveURL: {
         nocheck: false,
@@ -1844,9 +1847,9 @@ describe("loader", () => {
         inline: true,
       },
     });
-    expect(codeFromBundle.css).toBe(codeFromStylus.css);
-    expect(codeFromBundle.css).toMatchSnapshot("css");
-    expect(getWarnings(stats)).toMatchSnapshot("warnings");
-    expect(getErrors(stats)).toMatchSnapshot("errors");
+    assert.strictEqual(codeFromBundle.css, codeFromStylus.css);
+    t.assert.snapshot(codeFromBundle.css);
+    t.assert.snapshot(getWarnings(stats));
+    t.assert.snapshot(getErrors(stats));
   });
 });

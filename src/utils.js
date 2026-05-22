@@ -1,10 +1,10 @@
 import path from "node:path";
 // eslint-disable-next-line n/no-deprecated-api
-import { parse } from "node:url";
+import { parse, pathToFileURL } from "node:url";
 
 import normalizePath from "normalize-path";
 import { Compiler, Evaluator, Parser, nodes, utils } from "stylus";
-import DepsResolver from "stylus/lib/visitor/deps-resolver";
+import DepsResolver from "stylus/lib/visitor/deps-resolver.js";
 import { escapePath, glob, isDynamicPattern } from "tinyglobby";
 
 /**
@@ -44,7 +44,7 @@ function isProductionLikeMode(loaderContext) {
   return loaderContext.mode === "production" || !loaderContext.mode;
 }
 
-function getStylusOptions(loaderContext, loaderOptions) {
+async function getStylusOptions(loaderContext, loaderOptions) {
   const options =
     typeof loaderOptions.stylusOptions === "function"
       ? loaderOptions.stylusOptions(loaderContext) || {}
@@ -60,25 +60,42 @@ function getStylusOptions(loaderContext, loaderOptions) {
   };
 
   if (typeof stylusOptions.use !== "undefined") {
-    stylusOptions.use = (
-      Array.isArray(stylusOptions.use) ? stylusOptions.use : [stylusOptions.use]
-    ).map((item) => {
-      if (typeof item === "string") {
-        try {
-          const resolved = require.resolve(item);
-
-          loaderContext.addBuildDependency(resolved);
-
-          return require(resolved)(stylusOptions);
-        } catch (error) {
-          throw new Error(
-            `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`,
-          );
-        }
-      }
-
-      return item;
+    const resolve = loaderContext.getResolve({
+      dependencyType: "stylus",
+      conditionNames: ["..."],
+      mainFields: ["main", "..."],
+      mainFiles: ["index", "..."],
+      extensions: [".js", ".cjs", ".mjs"],
+      preferRelative: true,
     });
+
+    stylusOptions.use = await Promise.all(
+      (Array.isArray(stylusOptions.use)
+        ? stylusOptions.use
+        : [stylusOptions.use]
+      ).map(async (item) => {
+        if (typeof item === "string") {
+          try {
+            const resolved = await resolve(loaderContext.context, item);
+
+            loaderContext.addBuildDependency(resolved);
+
+            const { default: plugin } = await import(
+              pathToFileURL(resolved).href
+            );
+
+            return plugin(stylusOptions);
+          } catch (error) {
+            throw new Error(
+              `Failed to load "${item}" Stylus plugin. Are you sure it's installed?\n${error}`,
+              { cause: error },
+            );
+          }
+        }
+
+        return item;
+      }),
+    );
   }
 
   // https://github.com/stylus/stylus/issues/2119
@@ -99,16 +116,17 @@ function getStylusOptions(loaderContext, loaderOptions) {
   return stylusOptions;
 }
 
-function getStylusImplementation(loaderContext, implementation) {
-  let resolvedImplementation = implementation;
-
+async function getStylusImplementation(loaderContext, implementation) {
   if (!implementation || typeof implementation === "string") {
-    const stylusImplPkg = implementation || "stylus";
+    const specifier = implementation || "stylus";
+    const { default: resolved } = await import(
+      path.isAbsolute(specifier) ? pathToFileURL(specifier).href : specifier
+    );
 
-    resolvedImplementation = require(stylusImplPkg);
+    return resolved;
   }
 
-  return resolvedImplementation;
+  return implementation;
 }
 
 function getPossibleRequests(loaderContext, filename) {
@@ -169,6 +187,7 @@ async function resolveFilename(
       if (globBase === ".") {
         throw new Error(
           'Glob resolving without a glob base ("~**/*") is not supported, please specify a glob base ("~package/**/*")',
+          { cause: error },
         );
       }
 
@@ -192,7 +211,7 @@ async function resolveFilename(
         cwd: globResult,
       });
 
-      return paths.sort().filter((file) => /\.styl$/i.test(file));
+      return paths.toSorted().filter((file) => /\.styl$/i.test(file));
     }
 
     throw error;

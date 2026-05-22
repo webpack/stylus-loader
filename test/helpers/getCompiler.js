@@ -1,7 +1,10 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { Volume, createFsFromVolume } from "memfs";
 import webpack from "webpack";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default (fixture, loaderOptions = {}, config = {}) => {
   const fullConfig = {
@@ -21,10 +24,10 @@ export default (fixture, loaderOptions = {}, config = {}) => {
           test: /\.styl$/i,
           rules: [
             {
-              loader: require.resolve("./testLoader"),
+              loader: path.resolve(__dirname, "./testLoader.cjs"),
             },
             {
-              loader: path.resolve(__dirname, "../../src"),
+              loader: path.resolve(__dirname, "../../src/index.js"),
               options: loaderOptions || {},
             },
           ],
