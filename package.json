@@ -64,7 +64,6 @@
     "@changesets/get-github-info": "^0.8.0",
     "benchmark": "^2.1.4",
     "bootstrap-styl": "^5.0.9",
-    "cross-env": "^7.0.3",
     "cspell": "^8.10.0",
     "css-loader": "^7.1.2",
     "del": "^7.1.0",

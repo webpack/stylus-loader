@@ -1,6 +1,10 @@
-const path = require("node:path");
+import path from "node:path";
+import url from "node:url";
 
-module.exports = {
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   context: __dirname,
   entry: "./index.js",
   output: {
@@ -13,13 +17,10 @@ module.exports = {
         test: /\.styl$/,
         use: [
           {
-            loader: require("node:path").join(__dirname, "./testLoader.js"),
+            loader: path.join(__dirname, "./testLoader.js"),
           },
           {
-            loader: require("node:path").join(
-              __dirname,
-              "../../../dist/cjs.js",
-            ),
+            loader: path.join(__dirname, "../../../dist/cjs.js"),
             options: {},
           },
         ],
