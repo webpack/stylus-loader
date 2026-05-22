@@ -10,8 +10,21 @@ import {
   urlResolver,
 } from "./utils.js";
 
+/** @typedef {import("webpack").LoaderContext<LoaderOptions>} LoaderContext */
+/** @typedef {import("schema-utils/declarations/validate").Schema} Schema */
+/** @typedef {import("./utils.js").LoaderOptions} LoaderOptions */
+/** @typedef {import("./utils.js").StylusError} StylusError */
+/** @typedef {import("./utils.js").StylusOptions} StylusOptions */
+/** @typedef {import("./utils.js").EXPECTED_ANY} EXPECTED_ANY */
+
+/**
+ * The stylus-loader makes `Stylus` available to webpack modules.
+ * @this {LoaderContext}
+ * @param {string} source source
+ * @returns {Promise<void>} loader result
+ */
 export default async function stylusLoader(source) {
-  const options = this.getOptions(schema);
+  const options = this.getOptions(/** @type {Schema} */ (schema));
   const callback = this.async();
 
   let implementation;
@@ -22,7 +35,7 @@ export default async function stylusLoader(source) {
       options.implementation,
     );
   } catch (error) {
-    callback(error);
+    callback(/** @type {Error} */ (error));
 
     return;
   }
@@ -50,12 +63,14 @@ export default async function stylusLoader(source) {
 
   try {
     stylusOptions = await getStylusOptions(this, options);
-  } catch (err) {
-    callback(err);
+  } catch (error) {
+    callback(/** @type {Error} */ (error));
     return;
   }
 
-  const styl = implementation(data, stylusOptions);
+  const styl = /** @type {import("./utils.js").EXPECTED_ANY} */ (
+    implementation(data, stylusOptions)
+  );
 
   // include regular CSS on @import
   if (stylusOptions.includeCSS) {
@@ -103,7 +118,10 @@ export default async function stylusLoader(source) {
   }
 
   if (stylusOptions.resolveURL !== false) {
-    styl.define("url", urlResolver(stylusOptions.resolveURL));
+    styl.define(
+      "url",
+      urlResolver(/** @type {EXPECTED_ANY} */ (stylusOptions.resolveURL)),
+    );
   }
 
   const shouldUseWebpackImporter =
@@ -121,59 +139,73 @@ export default async function stylusLoader(source) {
       : Object.entries(stylusOptions.define);
 
     for (const defined of definitions) {
-      styl.define(...defined);
+      styl.define(.../** @type {[string, EXPECTED_ANY]} */ (defined));
     }
   }
 
-  styl.render(async (error, css) => {
-    if (error) {
-      if (error.filename) {
-        this.addDependency(path.normalize(error.filename));
-      }
-
-      const obj = new Error(error.message, { cause: error });
-
-      obj.stack = null;
-
-      callback(obj);
-
-      return;
-    }
-
-    if (stylusOptions._imports.length > 0) {
-      for (const importData of stylusOptions._imports) {
-        if (path.isAbsolute(importData.path)) {
-          this.addDependency(
-            path.normalize(
-              path.sep === "\\"
-                ? importData.path.replace(/^\/\/\?\//, "")
-                : importData.path,
-            ),
-          );
-        } else {
-          this.addDependency(path.resolve(process.cwd(), importData.path));
+  styl.render(
+    /**
+     * @param {StylusError | null} error error
+     * @param {string} css css
+     * @returns {Promise<void>} render result
+     */
+    async (error, css) => {
+      if (error) {
+        if (error.filename) {
+          this.addDependency(path.normalize(error.filename));
         }
-      }
-    }
 
-    let map = styl.sourcemap;
+        const obj = new Error(error.message, { cause: error });
 
-    if (map && useSourceMap) {
-      map = normalizeSourceMap(map, stylusOptions.dest);
+        obj.stack = /** @type {EXPECTED_ANY} */ (null);
 
-      try {
-        map.sourcesContent = await Promise.all(
-          map.sources.map(async (file) =>
-            (await readFile(this.fs, file)).toString(),
-          ),
-        );
-      } catch (err) {
-        callback(err);
+        callback(obj);
 
         return;
       }
-    }
 
-    callback(null, css, map);
-  });
+      if (stylusOptions._imports && stylusOptions._imports.length > 0) {
+        for (const importData of stylusOptions._imports) {
+          if (path.isAbsolute(importData.path)) {
+            this.addDependency(
+              path.normalize(
+                path.sep === "\\"
+                  ? importData.path.replace(/^\/\/\?\//, "")
+                  : importData.path,
+              ),
+            );
+          } else {
+            this.addDependency(path.resolve(process.cwd(), importData.path));
+          }
+        }
+      }
+
+      let map = styl.sourcemap;
+
+      if (map && useSourceMap) {
+        map = normalizeSourceMap(
+          map,
+          /** @type {string} */ (stylusOptions.dest),
+        );
+
+        try {
+          map.sourcesContent = await Promise.all(
+            map.sources.map(
+              /**
+               * @param {string} file file
+               * @returns {Promise<string>} file contents
+               */
+              async (file) => (await readFile(this.fs, file)).toString(),
+            ),
+          );
+        } catch (err) {
+          callback(/** @type {Error} */ (err));
+
+          return;
+        }
+      }
+
+      callback(null, css, map);
+    },
+  );
 }

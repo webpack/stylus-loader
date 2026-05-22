@@ -15,6 +15,9 @@ import {
   validateDependencies,
 } from "./helpers/index.js";
 
+// eslint-disable-next-line jsdoc/reject-any-type
+/** @typedef {any} EXPECTED_ANY */
+
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -106,6 +109,9 @@ describe("loader", () => {
   });
 
   it("should work when stylusOptions is function", async (t) => {
+    /**
+     * @returns {(style: EXPECTED_ANY) => void} stylus plugin
+     */
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -548,6 +554,9 @@ describe("loader", () => {
   });
 
   it('should work "use" option', async (t) => {
+    /**
+     * @returns {(style: EXPECTED_ANY) => void} stylus plugin
+     */
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -575,6 +584,9 @@ describe("loader", () => {
   });
 
   it('should work "use" option #1', async (t) => {
+    /**
+     * @returns {(style: EXPECTED_ANY) => void} stylus plugin
+     */
     function plugin() {
       return (style) => {
         style.define("add", (a, b) => a.operate("+", b));
@@ -669,6 +681,9 @@ describe("loader", () => {
   it("should work with plugin using bootstrap", async (t) => {
     const bootstrap = require("bootstrap-styl");
 
+    /**
+     * @returns {(styl: EXPECTED_ANY) => void} stylus plugin
+     */
     function plugin() {
       return (styl) => {
         bootstrap()(styl);

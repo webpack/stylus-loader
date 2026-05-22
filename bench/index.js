@@ -11,6 +11,10 @@ import importWebpackConfig from "./fixtures/imports/webpack.config.js";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * @param {(...args: unknown[]) => { on: (event: string, callback: () => void) => void }} fn function returning an emitter that emits "complete"
+ * @returns {(...args: unknown[]) => Promise<void>} a promise-returning function that resolves when "complete" fires
+ */
 function resolveOnComplete(fn) {
   return (...args) => {
     const _this = this;
