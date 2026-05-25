@@ -4,7 +4,7 @@ import { parse, pathToFileURL } from "node:url";
 
 import normalizePath from "normalize-path";
 import stylus from "stylus";
-// @ts-expect-error -- no types are shipped for this internal entry point
+// @ts-expect-error no types are shipped for this internal entry point
 import DepsResolver from "stylus/lib/visitor/deps-resolver.js";
 import { escapePath, glob, isDynamicPattern } from "tinyglobby";
 
@@ -18,32 +18,53 @@ const {
   nodes,
   utils,
 } = stylus;
-const Compiler = /** @type {EXPECTED_ANY} */ (StylusCompiler);
-const Evaluator = /** @type {EXPECTED_ANY} */ (StylusEvaluator);
-const Parser = /** @type {EXPECTED_ANY} */ (StylusParser);
+const Compiler = StylusCompiler;
+const Evaluator = StylusEvaluator;
+const Parser = StylusParser;
 
 /** @typedef {import("webpack").LoaderContext<LoaderOptions>} LoaderContext */
 /** @typedef {import("stylus/lib/renderer.js")} Renderer */
 
+/** @typedef {import("stylus").RenderOptions} RenderOptions */
+
 /**
- * @typedef {object} StylusOptions
- * @property {string=} filename filename
+ * @typedef {object} StylusResolveUrlOptions
+ * @property {boolean=} nocheck true when no need to check on disk, otherwise false
+ * @property {string[]=} paths additional paths
+ */
+
+/**
+ * @callback StylusPluginFn
+ * @param {EXPECTED_ANY} renderer render fn
+ * @returns {void}
+ */
+
+/**
+ * @typedef {object} StylusSourceMapOptions
+ * @property {boolean=} comment append the source map URL comment to the CSS.
+ * @property {string=} sourceRoot root URL for the source files.
+ * @property {string=} basePath base path to resolve relative source map paths.
+ * @property {boolean=} inline embed the source map directly into the CSS as Base64.
+ */
+
+/**
+ * @typedef {object} NoTypesStylusOptions
  * @property {string=} dest destination
- * @property {EXPECTED_ANY[] | EXPECTED_ANY=} use stylus plugins
+ * @property {StylusPluginFn[] | StylusPluginFn=} use stylus plugins
  * @property {string[]=} import files to import
  * @property {string[]=} include include paths
- * @property {string[]=} imports files to import
- * @property {string[]=} paths search paths
  * @property {boolean=} compress true if compressed output, otherwise false
  * @property {boolean=} includeCSS true if include CSS on `@import`, otherwise false
  * @property {boolean=} hoistAtrules true if hoist at-rules, otherwise false
  * @property {boolean=} lineNumbers true if line numbers are emitted, otherwise false
  * @property {boolean=} disableCache true if cache is disabled, otherwise false
- * @property {boolean | EXPECTED_ANY=} sourcemap source map
- * @property {boolean | EXPECTED_ANY=} resolveURL `resolveURL` options
+ * @property {boolean | StylusSourceMapOptions=} sourcemap source map
+ * @property {boolean | StylusResolveUrlOptions=} resolveURL `resolveURL` options
  * @property {(Record<string, EXPECTED_ANY> | ([string, EXPECTED_ANY] | [string, EXPECTED_ANY, boolean])[])=} define list of definitions
  * @property {{ path: string }[]=} _imports list of imports
  */
+
+/** @typedef {RenderOptions & NoTypesStylusOptions} StylusOptions */
 
 /**
  * @typedef {object} LoaderOptions
@@ -343,7 +364,7 @@ const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
  * @property {number} originalLineno original line number
  * @property {number} originalColumn original column
  * @property {string} originalNodePath original node path
- * @property {string | string[] | Promise<string | string[]>} resolved resolved path(s)
+ * @property {undefined | string | string[] | Promise<string | string[]>} resolved resolved path(s)
  * @property {Error=} error resolve error, when failed
  */
 
@@ -372,12 +393,14 @@ async function getDependencies(
 
   // See https://github.com/stylus/stylus/issues/2108
   const newOptions = { ...options, filename, cache: false };
-  const parser = /** @type {EXPECTED_ANY} */ (new Parser(code, newOptions));
+  // @ts-expect-error no types are shipped
+  const parser = new Parser(code, newOptions);
 
   /** @type {EXPECTED_ANY} */
   let ast;
 
   try {
+    // @ts-expect-error no types are shipped
     ast = parser.parse();
   } catch (error) {
     loaderContext.emitError(/** @type {Error} */ (error));
@@ -385,29 +408,38 @@ async function getDependencies(
     return;
   }
 
-  /** @type {(Dependency & { resolved: string | string[] | Promise<string | string[]> })[]} */
+  /** @type {(Dependency & { resolved?: undefined | string | string[] | Promise<string | string[]> })[]} */
   const dependencies = [];
 
   class ImportVisitor extends DepsResolver {
     /**
-     * @param {EXPECTED_ANY} node import node
+     * @param {import("stylus").nodes.Import} node import node
      * @returns {void}
      */
     visitImport(node) {
       let firstNode = node.path.first;
 
-      if (firstNode.name === "url") {
+      if (
+        /** @type {import("stylus").nodes.Call} */
+        (firstNode).name === "url"
+      ) {
         return;
       }
 
-      if (!firstNode.val) {
-        const evaluator = /** @type {EXPECTED_ANY} */ (new Evaluator(ast));
+      if (!(/** @type {import("stylus").nodes.String} */ (firstNode).val)) {
+        // @ts-expect-error no types are shipped for this
+        const evaluator = new Evaluator(ast);
 
+        // @ts-expect-error no types are shipped for this
         firstNode = evaluator.visit(firstNode).first;
       }
 
       const originalNodePath =
-        (!firstNode.val.isNull && firstNode.val) || firstNode.name;
+        // @ts-expect-error bad types
+        (!firstNode.val.isNull &&
+          /** @type {import("stylus").nodes.String} */ (firstNode).val) ||
+        /** @type {import("stylus").nodes.Ident} */
+        (firstNode).name;
       let nodePath = originalNodePath;
 
       if (!nodePath) {
@@ -426,8 +458,8 @@ async function getDependencies(
 
       const isGlob = isDynamicPattern(nodePath);
 
-      const self = /** @type {EXPECTED_ANY} */ (this);
-      let { filename, paths } = self;
+      // @ts-expect-error no types are shipped for this
+      let { filename, paths } = this;
 
       if (path.sep === "\\") {
         filename = filename.replace(/^\\\\\?\\/, "");
@@ -436,11 +468,7 @@ async function getDependencies(
         );
       }
 
-      found = /** @type {EXPECTED_ANY} */ (utils).find(
-        nodePath,
-        paths,
-        filename,
-      );
+      found = utils.find(nodePath, paths, filename);
 
       if (found && path.sep === "\\") {
         found = found.map((/** @type {string} */ item) =>
@@ -497,10 +525,10 @@ async function getDependencies(
     }
   }
 
-  const visitor = /** @type {EXPECTED_ANY} */ (
-    new /** @type {EXPECTED_ANY} */ (ImportVisitor)(ast, newOptions)
-  );
+  // @ts-expect-error no types are shipped for this
+  const visitor = new ImportVisitor(ast, newOptions);
 
+  // @ts-expect-error no types are shipped for this
   visitor.visit(ast);
 
   await Promise.all(
@@ -510,7 +538,6 @@ async function getDependencies(
       try {
         resolved = await resolved;
       } catch (err) {
-        /** @type {EXPECTED_ANY} */
         const r = result;
 
         delete r.resolved;
@@ -586,10 +613,11 @@ async function getDependencies(
 }
 
 /**
- * @param {EXPECTED_ANY[]} blocks blocks
- * @returns {EXPECTED_ANY} merged block
+ * @param {import("stylus").nodes.Block[]} blocks blocks
+ * @returns {import("stylus").nodes.Block | undefined} merged block
  */
 function mergeBlocks(blocks) {
+  /** @type {import("stylus").nodes.Block | undefined} */
   let finalBlock;
 
   for (const block of blocks) {
@@ -609,7 +637,7 @@ function mergeBlocks(blocks) {
  * @param {LoaderContext} loaderContext loader context
  * @param {string} code code
  * @param {StylusOptions} options stylus options
- * @returns {Promise<EXPECTED_ANY>} custom evaluator class
+ * @returns {Promise<Evaluator>} custom evaluator class
  */
 async function createEvaluator(loaderContext, code, options) {
   const fileResolve = loaderContext.getResolve({
@@ -730,17 +758,20 @@ async function createEvaluator(loaderContext, code, options) {
 
   return class CustomEvaluator extends Evaluator {
     /**
-     * @param {EXPECTED_ANY} imported imported
-     * @returns {EXPECTED_ANY} visit result
+     * @param {import("stylus").nodes.Import} imported imported
+     * @returns {import("stylus").nodes.Block | import("stylus").nodes.Import | undefined} visit result
      */
     visitImport(imported) {
-      const self = /** @type {EXPECTED_ANY} */ (this);
+      const self = this;
 
+      // @ts-expect-error internal logic
       self.return += 1;
 
+      // @ts-expect-error no types are shipped for this
       const node = self.visit(imported.path).first;
       const nodePath = (!node.val.isNull && node.val) || node.name;
 
+      // @ts-expect-error internal logic
       self.return -= 1;
 
       /** @type {Error & { details?: string, missing?: string[] } | undefined} */
@@ -795,8 +826,10 @@ async function createEvaluator(loaderContext, code, options) {
           } else if (resolved.length > 0) {
             let hasError = false;
 
+            /** @type {import("stylus").nodes.Block[]} */
             const blocks = resolved.map((item) => {
               const clonedImported = imported.clone();
+              // @ts-expect-error no types are shipped for this
               const clonedNode = self.visit(clonedImported.path).first;
 
               // Avoid re globbing when resolved import contains glob characters
@@ -805,9 +838,8 @@ async function createEvaluator(loaderContext, code, options) {
               let result;
 
               try {
-                result = /** @type {EXPECTED_ANY} */ (super.visitImport)(
-                  clonedImported,
-                );
+                // @ts-expect-error no types are shipped for this
+                result = super.visitImport(clonedImported);
               } catch {
                 hasError = true;
               }
@@ -822,10 +854,12 @@ async function createEvaluator(loaderContext, code, options) {
         }
       }
 
+      /** @type {import("stylus").nodes.Block | undefined} */
       let result;
 
       try {
-        result = /** @type {EXPECTED_ANY} */ (super.visitImport)(imported);
+        // @ts-expect-error no types are shipped for this
+        result = super.visitImport(imported);
       } catch (error) {
         loaderContext.emitError(
           new Error(
@@ -864,30 +898,31 @@ function urlResolver(options = {}) {
   const resolverOptions = typeof options === "boolean" ? {} : options;
 
   /**
-   * @this {EXPECTED_ANY}
-   * @param {EXPECTED_ANY} url url node
-   * @returns {EXPECTED_ANY} a Literal node
+   * @this {import("stylus").Evaluator & { paths: string[], filename: string, includeCSS?: boolean }}
+   * @param {import("stylus").nodes.Expression} url url node
+   * @returns {import("stylus").nodes.Literal} a Literal node
    */
   function resolver(url) {
-    const compiler = /** @type {EXPECTED_ANY} */ (new Compiler(url));
+    // @ts-expect-error no types are shipped for this
+    const compiler = new Compiler(url);
     let { filename } = url;
 
     if (path.sep === "\\") {
       filename = filename.replace(/^\/\/\?\//, "");
     }
 
+    // @ts-expect-error no types are shipped for this
     compiler.isURL = true;
 
-    const visitedUrl = url.nodes
-      .map((/** @type {EXPECTED_ANY} */ node) => compiler.visit(node))
-      .join("");
+    // @ts-expect-error no types are shipped for this
+    const visitedUrl = url.nodes.map((node) => compiler.visit(node)).join("");
     const splitted = visitedUrl.split("!");
-
-    const parsedUrl = parse(splitted.pop());
+    const parsedUrl = parse(/** @type {string} */ (splitted.pop()));
 
     // Parse literal
     const literal = new nodes.Literal(`url("${parsedUrl.href}")`);
     let { pathname } = parsedUrl;
+    // @ts-expect-error no types are shipped for this
     let { dest } = this.options;
 
     let tail = "";
@@ -902,7 +937,8 @@ function urlResolver(options = {}) {
     if (!resolverOptions.nocheck) {
       const _paths = resolverOptions.paths || [];
 
-      pathname = /** @type {EXPECTED_ANY} */ (utils).lookup(pathname, [
+      // @ts-expect-error bad types
+      pathname = utils.lookup(pathname, [
         ..._paths,
         ...(path.sep === "\\"
           ? this.paths.map((/** @type {string} */ item) =>

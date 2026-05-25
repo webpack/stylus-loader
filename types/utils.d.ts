@@ -1,10 +1,36 @@
 export type LoaderContext = import("webpack").LoaderContext<LoaderOptions>;
 export type Renderer = import("stylus/lib/renderer.js");
-export type StylusOptions = {
+export type RenderOptions = import("stylus").RenderOptions;
+export type StylusResolveUrlOptions = {
   /**
-   * filename
+   * true when no need to check on disk, otherwise false
    */
-  filename?: string | undefined;
+  nocheck?: boolean | undefined;
+  /**
+   * additional paths
+   */
+  paths?: string[] | undefined;
+};
+export type StylusPluginFn = (renderer: EXPECTED_ANY) => void;
+export type StylusSourceMapOptions = {
+  /**
+   * append the source map URL comment to the CSS.
+   */
+  comment?: boolean | undefined;
+  /**
+   * root URL for the source files.
+   */
+  sourceRoot?: string | undefined;
+  /**
+   * base path to resolve relative source map paths.
+   */
+  basePath?: string | undefined;
+  /**
+   * embed the source map directly into the CSS as Base64.
+   */
+  inline?: boolean | undefined;
+};
+export type NoTypesStylusOptions = {
   /**
    * destination
    */
@@ -12,7 +38,7 @@ export type StylusOptions = {
   /**
    * stylus plugins
    */
-  use?: (EXPECTED_ANY[] | EXPECTED_ANY) | undefined;
+  use?: (StylusPluginFn[] | StylusPluginFn) | undefined;
   /**
    * files to import
    */
@@ -21,14 +47,6 @@ export type StylusOptions = {
    * include paths
    */
   include?: string[] | undefined;
-  /**
-   * files to import
-   */
-  imports?: string[] | undefined;
-  /**
-   * search paths
-   */
-  paths?: string[] | undefined;
   /**
    * true if compressed output, otherwise false
    */
@@ -52,11 +70,11 @@ export type StylusOptions = {
   /**
    * source map
    */
-  sourcemap?: (boolean | EXPECTED_ANY) | undefined;
+  sourcemap?: (boolean | StylusSourceMapOptions) | undefined;
   /**
    * `resolveURL` options
    */
-  resolveURL?: (boolean | EXPECTED_ANY) | undefined;
+  resolveURL?: (boolean | StylusResolveUrlOptions) | undefined;
   /**
    * list of definitions
    */
@@ -75,6 +93,7 @@ export type StylusOptions = {
       }[]
     | undefined;
 };
+export type StylusOptions = RenderOptions & NoTypesStylusOptions;
 export type LoaderOptions = {
   /**
    * stylus implementation
@@ -159,7 +178,7 @@ export type Dependency = {
   /**
    * resolved path(s)
    */
-  resolved: string | string[] | Promise<string | string[]>;
+  resolved: undefined | string | string[] | Promise<string | string[]>;
   /**
    * resolve error, when failed
    */
@@ -170,13 +189,15 @@ export type EXPECTED_ANY = any;
  * @param {LoaderContext} loaderContext loader context
  * @param {string} code code
  * @param {StylusOptions} options stylus options
- * @returns {Promise<EXPECTED_ANY>} custom evaluator class
+ * @returns {Promise<Evaluator>} custom evaluator class
  */
 export function createEvaluator(
   loaderContext: LoaderContext,
   code: string,
   options: StylusOptions,
-): Promise<EXPECTED_ANY>;
+): Promise<{
+  new (): {};
+}>;
 /**
  * This function is not Webpack-specific and can be used by tools wishing to mimic `stylus-loader`'s behaviour, so its signature should not be changed.
  * @param {LoaderContext} loaderContext loader context

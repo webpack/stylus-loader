@@ -58,6 +58,7 @@
     "release": "npm run build && changeset publish"
   },
   "dependencies": {
+    "@types/stylus": "^0.48.43",
     "normalize-path": "^3.0.0",
     "tinyglobby": "^0.2.12"
   },
@@ -69,7 +70,6 @@
     "@changesets/get-github-info": "^0.8.0",
     "@types/node": "^22.19.19",
     "@types/normalize-path": "^3.0.2",
-    "@types/stylus": "^0.48.43",
     "benchmark": "^2.1.4",
     "bootstrap-styl": "^5.0.9",
     "cspell": "^10.0.0",

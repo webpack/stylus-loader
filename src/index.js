@@ -68,9 +68,7 @@ export default async function stylusLoader(source) {
     return;
   }
 
-  const styl = /** @type {import("./utils.js").EXPECTED_ANY} */ (
-    implementation(data, stylusOptions)
-  );
+  const styl = implementation(data, stylusOptions);
 
   // include regular CSS on @import
   if (stylusOptions.includeCSS) {
@@ -118,10 +116,7 @@ export default async function stylusLoader(source) {
   }
 
   if (stylusOptions.resolveURL !== false) {
-    styl.define(
-      "url",
-      urlResolver(/** @type {EXPECTED_ANY} */ (stylusOptions.resolveURL)),
-    );
+    styl.define("url", urlResolver(stylusOptions.resolveURL));
   }
 
   const shouldUseWebpackImporter =
@@ -180,6 +175,7 @@ export default async function stylusLoader(source) {
         }
       }
 
+      // @ts-expect-error no types are shipped for this
       let map = styl.sourcemap;
 
       if (map && useSourceMap) {
