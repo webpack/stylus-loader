@@ -5,6 +5,10 @@ import { fileURLToPath } from "node:url";
 import stylus from "stylus";
 import Evaluator from "stylus/lib/visitor/evaluator.js";
 
+// eslint-disable-next-line jsdoc/reject-any-type
+/** @typedef {any} EXPECTED_ANY */
+/** @typedef {EXPECTED_ANY} EvaluatorCtor */
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const fixturesDir = path.resolve(__dirname, "..", "fixtures");
@@ -85,8 +89,15 @@ const pathMap = {
   ),
 };
 
+/**
+ * @returns {EvaluatorCtor} a custom evaluator class
+ */
 function evaluator() {
   return class CustomEvaluator extends Evaluator {
+    /**
+     * @param {EXPECTED_ANY} imported imported
+     * @returns {EXPECTED_ANY} visit result
+     */
     visitImport(imported) {
       try {
         return super.visitImport(imported);
@@ -117,6 +128,10 @@ function evaluator() {
   };
 }
 
+/**
+ * @param {EXPECTED_ANY} styl stylus renderer
+ * @returns {Promise<{ css: string, map: EXPECTED_ANY }>} stylus result
+ */
 function stylRender(styl) {
   return new Promise((resolve, reject) => {
     styl.render(async (error, css) => {
@@ -131,6 +146,12 @@ function stylRender(styl) {
   });
 }
 
+/**
+ * @param {string} testId test fixture identifier
+ * @param {EXPECTED_ANY=} options options
+ * @param {EXPECTED_ANY=} context test context
+ * @returns {Promise<{ css: string, map: EXPECTED_ANY }>} stylus result
+ */
 async function getCodeFromStylus(testId, options = {}, context = {}) {
   const defaultOptions = {
     shouldUseWebpackImporter: true,

@@ -1,3 +1,7 @@
+/**
+ * @param {string} str string to normalize
+ * @returns {string} normalized string with `cwd` removed
+ */
 function removeCWD(str) {
   const isWin = process.platform === "win32";
   let cwd = process.cwd();

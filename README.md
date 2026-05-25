@@ -113,18 +113,17 @@ module.exports = {
             loader: "stylus-loader",
             options: {
               stylusOptions: {
+                // eslint-disable-next-line jsdoc/no-restricted-syntax
                 /**
                  * Specify Stylus plugins to use. Plugins may be passed as
                  * strings instead of importing them in your Webpack config.
-                 *
-                 * @type {(string|Function)[]}
+                 * @type {(string | (renderer: object) => void)[]}
                  * @default []
                  */
                 use: ["nib"],
 
                 /**
                  * Add path(s) to the import lookup paths.
-                 *
                  * @type {string[]}
                  * @default []
                  */
@@ -132,7 +131,6 @@ module.exports = {
 
                 /**
                  * Import the specified Stylus files/paths.
-                 *
                  * @type {string[]}
                  * @default []
                  */
@@ -140,8 +138,7 @@ module.exports = {
 
                 /**
                  * Define Stylus variables or functions.
-                 *
-                 * @type {Array|Object}
+                 * @type {[string, string | number | boolean, boolean?] | Record<string, string | number | boolean>}
                  * @default {}
                  */
                 // Array is the recommended syntax: [key, value, raw]
@@ -156,8 +153,7 @@ module.exports = {
                 // },
 
                 /**
-                 * Include regular CSS on @import.
-                 *
+                 * Include regular CSS on \@import.
                  * @type {boolean}
                  * @default false
                  */
@@ -165,10 +161,8 @@ module.exports = {
 
                 /**
                  * Resolve relative url()'s inside imported files.
-                 *
                  * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
-                 *
-                 * @type {boolean|Object}
+                 * @type {boolean | { nocheck?: boolean, paths?: string[] }}
                  * @default { nocheck: true }
                  */
                 resolveURL: true,
@@ -176,19 +170,15 @@ module.exports = {
 
                 /**
                  * Emits comments in the generated CSS indicating the corresponding Stylus line.
-                 *
                  * @see https://stylus-lang.com/docs/executable.html
-                 *
                  * @type {boolean}
                  * @default false
                  */
                 lineNumbers: true,
 
                 /**
-                 * Move @import and @charset to the top.
-                 *
+                 * Move \@import and \@charset to the top.
                  * @see https://stylus-lang.com/docs/executable.html
-                 *
                  * @type {boolean}
                  * @default false
                  */
@@ -197,9 +187,7 @@ module.exports = {
                 /**
                  * Compress CSS output.
                  * In the "production" mode is `true` by default
-                 *
                  * @see https://stylus-lang.com/docs/executable.html
-                 *
                  * @type {boolean}
                  * @default false
                  */
