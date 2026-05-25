@@ -38,7 +38,7 @@ export type NoTypesStylusOptions = {
   /**
    * stylus plugins
    */
-  use?: (StylusPluginFn[] | StylusPluginFn) | undefined;
+  use?: (string | StylusPluginFn | (string | StylusPluginFn)[]) | undefined;
   /**
    * files to import
    */

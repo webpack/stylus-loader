@@ -30,12 +30,11 @@ const Parser = StylusParser;
 /**
  * @typedef {object} StylusResolveUrlOptions
  * @property {boolean=} nocheck true when no need to check on disk, otherwise false
- * @property {string[]=} paths additional paths
  */
 
 /**
  * @callback StylusPluginFn
- * @param {EXPECTED_ANY} renderer render fn
+ * @param {object} renderer renderer
  * @returns {void}
  */
 
@@ -50,7 +49,7 @@ const Parser = StylusParser;
 /**
  * @typedef {object} NoTypesStylusOptions
  * @property {string=} dest destination
- * @property {StylusPluginFn[] | StylusPluginFn=} use stylus plugins
+ * @property {string | StylusPluginFn | (string | StylusPluginFn)[]=} use stylus plugins
  * @property {string[]=} import files to import
  * @property {string[]=} include include paths
  * @property {boolean=} compress true if compressed output, otherwise false
