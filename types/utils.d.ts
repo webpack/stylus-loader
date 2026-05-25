@@ -189,15 +189,13 @@ export type EXPECTED_ANY = any;
  * @param {LoaderContext} loaderContext loader context
  * @param {string} code code
  * @param {StylusOptions} options stylus options
- * @returns {Promise<Evaluator>} custom evaluator class
+ * @returns {Promise<typeof StylusEvaluator>} custom evaluator class
  */
 export function createEvaluator(
   loaderContext: LoaderContext,
   code: string,
   options: StylusOptions,
-): Promise<{
-  new (): {};
-}>;
+): Promise<typeof StylusEvaluator>;
 /**
  * This function is not Webpack-specific and can be used by tools wishing to mimic `stylus-loader`'s behaviour, so its signature should not be changed.
  * @param {LoaderContext} loaderContext loader context
@@ -268,3 +266,7 @@ export function urlResolver(
       )
     | undefined,
 ): EXPECTED_ANY;
+declare const StylusEvaluator: {
+  new (): {};
+};
+export {};

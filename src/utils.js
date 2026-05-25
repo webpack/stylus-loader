@@ -637,7 +637,7 @@ function mergeBlocks(blocks) {
  * @param {LoaderContext} loaderContext loader context
  * @param {string} code code
  * @param {StylusOptions} options stylus options
- * @returns {Promise<Evaluator>} custom evaluator class
+ * @returns {Promise<typeof StylusEvaluator>} custom evaluator class
  */
 async function createEvaluator(loaderContext, code, options) {
   const fileResolve = loaderContext.getResolve({
