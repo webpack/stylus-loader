@@ -22,9 +22,9 @@ const srcDir = fileURLToPath(new URL("../src", import.meta.url));
 
 /**
  * Transpile every `.js` file under `src/` to CommonJS in `outDir`, copy
- * non-JS assets, then write the `dist/package.json` type marker and append
- * the same `module.exports = exports.default` tail the `build:cjs-marker`
- * npm script writes. The test then `require()`s the result.
+ * non-JS assets, then drop the `dist/cjs/package.json` type marker and
+ * the same `module.exports = exports.default` post-build append the
+ * `build:cjs` npm script writes. The test then `require()`s the result.
  * @param {string} outDir target directory
  */
 async function buildCjsBundle(outDir) {
@@ -62,6 +62,9 @@ describe("cjs", () => {
   let cjsLoader;
 
   before(async () => {
+    // The temp dir must live inside the project tree so the transpiled
+    // CJS bundle can resolve runtime dependencies (e.g. `normalize-path`,
+    // `tinyglobby`) from the project's own `node_modules`.
     cjsDir = mkdtempSync(
       path.join(
         fileURLToPath(new URL("..", import.meta.url)),
@@ -87,6 +90,12 @@ describe("cjs", () => {
     assert.strictEqual(typeof src, "function");
   });
 
+  // Run Babel against `src/` directly (no dependency on the published
+  // `dist/`) and assert the resulting CommonJS bundle has the shape the
+  // `build:cjs` pipeline promises: it's marked CommonJS, opens with
+  // Babel's strict-mode prologue and `exports.default = stylusLoader`, and
+  // ends with the `module.exports = exports.default;` unwrap so `require()`
+  // returns the loader function directly.
   it("should produce a require()-able CommonJS bundle via @babel/core", () => {
     assert.strictEqual(cjsPackage.type, "commonjs");
 
@@ -98,6 +107,12 @@ describe("cjs", () => {
     assert.strictEqual(cjsLoader.default, cjsLoader);
   });
 
+  // Pre-refactor consumers loaded the loader two ways:
+  //   const loader = require("stylus-loader");     // function
+  //   import loader from "stylus-loader";          // function
+  // Both surfaces must continue to return a callable function, with a
+  // `.default` property pointing back at the same function so transitional
+  // `require("stylus-loader").default` calls keep working.
   it("should expose the loader through `require` as a callable function (pre-refactor shape)", () => {
     assert.strictEqual(typeof cjsLoader, "function");
     assert.strictEqual(typeof src, "function");
