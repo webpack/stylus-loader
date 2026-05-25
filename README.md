@@ -162,7 +162,7 @@ module.exports = {
                 /**
                  * Resolve relative url()'s inside imported files.
                  * @see https://stylus-lang.com/docs/js.html#stylusresolveroptions
-                 * @type {boolean | { nocheck?: boolean }}
+                 * @type {boolean | { nocheck?: boolean, paths?: string[] }}
                  * @default { nocheck: true }
                  */
                 resolveURL: true,

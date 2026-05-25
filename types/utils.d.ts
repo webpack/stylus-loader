@@ -11,7 +11,7 @@ export type StylusResolveUrlOptions = {
    */
   paths?: string[] | undefined;
 };
-export type StylusPluginFn = (renderer: EXPECTED_ANY) => void;
+export type StylusPluginFn = (renderer: object) => void;
 export type StylusSourceMapOptions = {
   /**
    * append the source map URL comment to the CSS.

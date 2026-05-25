@@ -30,6 +30,7 @@ const Parser = StylusParser;
 /**
  * @typedef {object} StylusResolveUrlOptions
  * @property {boolean=} nocheck true when no need to check on disk, otherwise false
+ * @property {string[]=} paths additional paths
  */
 
 /**
