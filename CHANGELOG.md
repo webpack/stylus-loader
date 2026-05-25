@@ -1,196 +1,190 @@
 # Changelog
 
+## 9.0.0
+
+### Major Changes
+
+- Minimum supported Node.js version is now `22.11.0`. (by [@alexander-akait](https://github.com/alexander-akait) in [#461](https://github.com/webpack/stylus-loader/pull/461))
+
+- Migrated source and published bundles to ECMAScript modules. The package (by [@alexander-akait](https://github.com/alexander-akait) in [#461](https://github.com/webpack/stylus-loader/pull/461))
+  is now ESM (`"type": "module"`) and exposes both an ESM build at
+  `./dist/esm/index.js` and a CommonJS build at `./dist/cjs/index.js` via
+  the `exports` field. The `main` entry now points to `./dist/cjs/index.js`.
+
+### Minor Changes
+
+- Added JSDoc type annotations and TypeScript declaration file generation. The package now ships `types/index.d.ts` and exposes types via the package's `exports`/`types` fields. (by [@alexander-akait](https://github.com/alexander-akait) in [#464](https://github.com/webpack/stylus-loader/pull/464))
+
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### [8.1.3](https://github.com/webpack/stylus-loader/compare/v8.1.2...v8.1.3) (2026-02-05)
 
-
 ### Bug Fixes
 
-* update peer dependency for @rspack/core v2 ([#447](https://github.com/webpack/stylus-loader/issues/447)) ([2af82b2](https://github.com/webpack/stylus-loader/commit/2af82b245bed5ee5cf08f79228c9050c030e66e4))
+- update peer dependency for @rspack/core v2 ([#447](https://github.com/webpack/stylus-loader/issues/447)) ([2af82b2](https://github.com/webpack/stylus-loader/commit/2af82b245bed5ee5cf08f79228c9050c030e66e4))
 
 ### [8.1.2](https://github.com/webpack-contrib/stylus-loader/compare/v8.1.1...v8.1.2) (2025-08-18)
 
-
 ### Bug Fixes
 
-* resolving problems on windows ([a1a3140](https://github.com/webpack-contrib/stylus-loader/commit/a1a31401d7e3686ad6bcdc63f2063766a88c8177))
+- resolving problems on windows ([a1a3140](https://github.com/webpack-contrib/stylus-loader/commit/a1a31401d7e3686ad6bcdc63f2063766a88c8177))
 
 ### [8.1.1](https://github.com/webpack-contrib/stylus-loader/compare/v8.1.0...v8.1.1) (2024-09-18)
 
-
 ### Bug Fixes
 
-* avoid losing `use` during incremental build ([#425](https://github.com/webpack-contrib/stylus-loader/issues/425)) ([4f28957](https://github.com/webpack-contrib/stylus-loader/commit/4f28957af51522d4ab2fc8f591d11f53191d66b8))
+- avoid losing `use` during incremental build ([#425](https://github.com/webpack-contrib/stylus-loader/issues/425)) ([4f28957](https://github.com/webpack-contrib/stylus-loader/commit/4f28957af51522d4ab2fc8f591d11f53191d66b8))
 
 ## [8.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v8.0.0...v8.1.0) (2024-01-30)
 
-
 ### Features
 
-* add @rspack/core as an optional peer dependency ([#407](https://github.com/webpack-contrib/stylus-loader/issues/407)) ([4315ff6](https://github.com/webpack-contrib/stylus-loader/commit/4315ff62556ba33b3c95f5807f253ca4585f9808))
+- add @rspack/core as an optional peer dependency ([#407](https://github.com/webpack-contrib/stylus-loader/issues/407)) ([4315ff6](https://github.com/webpack-contrib/stylus-loader/commit/4315ff62556ba33b3c95f5807f253ca4585f9808))
 
 ## [8.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.3...v8.0.0) (2024-01-15)
 
-
 ### ⚠ BREAKING CHANGES
 
-* minimum supported Node.js version is `18.12.0` ([#404](https://github.com/webpack-contrib/stylus-loader/issues/404)) ([505ecd0](https://github.com/webpack-contrib/stylus-loader/commit/505ecd009090e93597c6931ad1ec621c8e9240e5))
+- minimum supported Node.js version is `18.12.0` ([#404](https://github.com/webpack-contrib/stylus-loader/issues/404)) ([505ecd0](https://github.com/webpack-contrib/stylus-loader/commit/505ecd009090e93597c6931ad1ec621c8e9240e5))
 
 ### [7.1.3](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.2...v7.1.3) (2023-06-08)
 
-
 ### Bug Fixes
 
-* **perf:** avoid using `klona` for `stylus` options ([#394](https://github.com/webpack-contrib/stylus-loader/issues/394)) ([261f70e](https://github.com/webpack-contrib/stylus-loader/commit/261f70edaaa2435f3fe2637abadba2e6a84dc1a9))
+- **perf:** avoid using `klona` for `stylus` options ([#394](https://github.com/webpack-contrib/stylus-loader/issues/394)) ([261f70e](https://github.com/webpack-contrib/stylus-loader/commit/261f70edaaa2435f3fe2637abadba2e6a84dc1a9))
 
 ### [7.1.2](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.1...v7.1.2) (2023-05-28)
 
-
 ### Bug Fixes
 
-* avoid stack in error messages ([#391](https://github.com/webpack-contrib/stylus-loader/issues/391)) ([b6f5578](https://github.com/webpack-contrib/stylus-loader/commit/b6f55783df2b4233383d96fad574906f6ccb26b8))
+- avoid stack in error messages ([#391](https://github.com/webpack-contrib/stylus-loader/issues/391)) ([b6f5578](https://github.com/webpack-contrib/stylus-loader/commit/b6f55783df2b4233383d96fad574906f6ccb26b8))
 
 ### [7.1.1](https://github.com/webpack-contrib/stylus-loader/compare/v7.1.0...v7.1.1) (2023-05-25)
 
-
 ### Bug Fixes
 
-* handling errors better ([#390](https://github.com/webpack-contrib/stylus-loader/issues/390)) ([25de46d](https://github.com/webpack-contrib/stylus-loader/commit/25de46dcff4a9d989a706fc198919f0e5cf07efa))
+- handling errors better ([#390](https://github.com/webpack-contrib/stylus-loader/issues/390)) ([25de46d](https://github.com/webpack-contrib/stylus-loader/commit/25de46dcff4a9d989a706fc198919f0e5cf07efa))
 
 ## [7.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v7.0.0...v7.1.0) (2022-10-06)
 
-
 ### Features
 
-* allow to extend `conditionNames` ([#365](https://github.com/webpack-contrib/stylus-loader/issues/365)) ([5d76d64](https://github.com/webpack-contrib/stylus-loader/commit/5d76d646585a80b3b5729540850c1f66fdf9aaf0))
+- allow to extend `conditionNames` ([#365](https://github.com/webpack-contrib/stylus-loader/issues/365)) ([5d76d64](https://github.com/webpack-contrib/stylus-loader/commit/5d76d646585a80b3b5729540850c1f66fdf9aaf0))
 
 ## [7.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.2.0...v7.0.0) (2022-05-17)
 
 ### ⚠ BREAKING CHANGES
 
-* minimum supported `Node.js` version is `14.15.0`
+- minimum supported `Node.js` version is `14.15.0`
 
 ## [6.2.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.1.0...v6.2.0) (2021-10-12)
 
-
 ### Features
 
-* add `link` field in schema ([#319](https://github.com/webpack-contrib/stylus-loader/issues/319)) ([dbc073f](https://github.com/webpack-contrib/stylus-loader/commit/dbc073f942af280fec2e72365f42ab92eb9ef7b3))
+- add `link` field in schema ([#319](https://github.com/webpack-contrib/stylus-loader/issues/319)) ([dbc073f](https://github.com/webpack-contrib/stylus-loader/commit/dbc073f942af280fec2e72365f42ab92eb9ef7b3))
 
 ## [6.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v6.0.0...v6.1.0) (2021-06-10)
 
-
 ### Features
 
-* allow to use `String` value for the `implementation` option ([b118719](https://github.com/webpack-contrib/stylus-loader/commit/b1187196de0755417f12d81aa72ea2629d946371))
+- allow to use `String` value for the `implementation` option ([b118719](https://github.com/webpack-contrib/stylus-loader/commit/b1187196de0755417f12d81aa72ea2629d946371))
 
 ## [6.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v5.0.0...v6.0.0) (2021-05-12)
 
-
 ### ⚠ BREAKING CHANGES
 
-* minimum supported `Node.js` version is `12.13.0`
+- minimum supported `Node.js` version is `12.13.0`
 
 ## [5.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.3...v5.0.0) (2021-02-02)
 
-
 ### Notes
 
-* using `~` is deprecated and can be removed from your code (**we recommend it**), but we still support it for historical reasons. 
+- using `~` is deprecated and can be removed from your code (**we recommend it**), but we still support it for historical reasons.
 
 Why you can removed it?
 The loader will first try to resolve `@import`/`@require` as relative, if it cannot be resolved, the loader will try to resolve `@import`/`@require` inside [`node_modules`](https://webpack.js.org/configuration/resolve/#resolve-modules).
 
 ### ⚠ BREAKING CHANGES
 
-* minimum supported `webpack` version is `5`
+- minimum supported `webpack` version is `5`
 
 ### Features
 
-* supported the [`resolve.byDependency`](https://webpack.js.org/configuration/resolve/#resolvebydependency) option, you can setup `{ resolve: { byDependency: { stylus: { mainFiles: ['custom', '...'] } } } }`
+- supported the [`resolve.byDependency`](https://webpack.js.org/configuration/resolve/#resolvebydependency) option, you can setup `{ resolve: { byDependency: { stylus: { mainFiles: ['custom', '...'] } } } }`
 
 ### [4.3.3](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.2...v4.3.3) (2021-01-15)
 
-
 ### Bug Fixes
 
-* respect the `compress` option ([#303](https://github.com/webpack-contrib/stylus-loader/issues/303)) ([e964abc](https://github.com/webpack-contrib/stylus-loader/commit/e964abcf18147c1a3894e47cc9e8970379ae33e6))
+- respect the `compress` option ([#303](https://github.com/webpack-contrib/stylus-loader/issues/303)) ([e964abc](https://github.com/webpack-contrib/stylus-loader/commit/e964abcf18147c1a3894e47cc9e8970379ae33e6))
 
 ### [4.3.2](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.1...v4.3.2) (2021-01-09)
 
-
 ### Bug Fixes
 
-* convert relative paths to absolute paths in dependencies ([#301](https://github.com/webpack-contrib/stylus-loader/issues/301)) ([3ded080](https://github.com/webpack-contrib/stylus-loader/commit/3ded080fdc0425c3ebdf41f3204a36bae2eaa02c))
+- convert relative paths to absolute paths in dependencies ([#301](https://github.com/webpack-contrib/stylus-loader/issues/301)) ([3ded080](https://github.com/webpack-contrib/stylus-loader/commit/3ded080fdc0425c3ebdf41f3204a36bae2eaa02c))
 
 ### [4.3.1](https://github.com/webpack-contrib/stylus-loader/compare/v4.3.0...v4.3.1) (2020-12-02)
 
-
 ### Bug Fixes
 
-* prevent search nested imports in css files ([#298](https://github.com/webpack-contrib/stylus-loader/issues/298)) ([092e52a](https://github.com/webpack-contrib/stylus-loader/commit/092e52a5463f7997b3a9545bf636f3bee8fd9dd3))
+- prevent search nested imports in css files ([#298](https://github.com/webpack-contrib/stylus-loader/issues/298)) ([092e52a](https://github.com/webpack-contrib/stylus-loader/commit/092e52a5463f7997b3a9545bf636f3bee8fd9dd3))
 
 ## [4.3.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.2.0...v4.3.0) (2020-11-11)
 
-
 ### Features
 
-* allow the `additionalData` to be async ([0ce3dd8](https://github.com/webpack-contrib/stylus-loader/commit/0ce3dd83cf0b3135272cc6bdb045663c09288fec))
+- allow the `additionalData` to be async ([0ce3dd8](https://github.com/webpack-contrib/stylus-loader/commit/0ce3dd83cf0b3135272cc6bdb045663c09288fec))
 
 ## [4.2.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.1.1...v4.2.0) (2020-10-29)
 
-
 ### Features
 
-* nested webpack resolve in the `import` option ([#295](https://github.com/webpack-contrib/stylus-loader/issues/295)) ([390aeba](https://github.com/webpack-contrib/stylus-loader/commit/390aeba85ab3f29f86e18f9b94d36c403091e560))
+- nested webpack resolve in the `import` option ([#295](https://github.com/webpack-contrib/stylus-loader/issues/295)) ([390aeba](https://github.com/webpack-contrib/stylus-loader/commit/390aeba85ab3f29f86e18f9b94d36c403091e560))
 
 ### [4.1.1](https://github.com/webpack-contrib/stylus-loader/compare/v4.1.0...v4.1.1) (2020-10-09)
 
-* update `schema-utils`
+- update `schema-utils`
 
 ## [4.1.0](https://github.com/webpack-contrib/stylus-loader/compare/v4.0.0...v4.1.0) (2020-10-02)
 
-
 ### Features
 
-* webpack resolver supports the `import` option ([8bca526](https://github.com/webpack-contrib/stylus-loader/commit/8bca5262b5b3223108d14f8e10617ae6ca8dd85f))
-
+- webpack resolver supports the `import` option ([8bca526](https://github.com/webpack-contrib/stylus-loader/commit/8bca5262b5b3223108d14f8e10617ae6ca8dd85f))
 
 ### Bug Fixes
 
-* source maps ([#290](https://github.com/webpack-contrib/stylus-loader/issues/290)) ([1be8169](https://github.com/webpack-contrib/stylus-loader/commit/1be8169c888d1a8e3531e79ebe1e1ef53d7821e7))
+- source maps ([#290](https://github.com/webpack-contrib/stylus-loader/issues/290)) ([1be8169](https://github.com/webpack-contrib/stylus-loader/commit/1be8169c888d1a8e3531e79ebe1e1ef53d7821e7))
 
 ## [4.0.0](https://github.com/webpack-contrib/stylus-loader/compare/v3.0.2...v4.0.0) (2020-09-29)
 
-
 ### ⚠ BREAKING CHANGES
 
-* minimum require `Node.js` version is `10.13`, minimum require `webpack` version is `4`
-* `stylus` options were moved to `stylusOptions`
-* the default value for the `compress` option is `true` in the `production` mode
-* the `resolveUrl` option is `{ nocheck: true }` by default
-* sourcemaps contain absolute `sources` by default
+- minimum require `Node.js` version is `10.13`, minimum require `webpack` version is `4`
+- `stylus` options were moved to `stylusOptions`
+- the default value for the `compress` option is `true` in the `production` mode
+- the `resolveUrl` option is `{ nocheck: true }` by default
+- sourcemaps contain absolute `sources` by default
 
 ### Features
 
-* added loader options validation ([#234](https://github.com/webpack-contrib/stylus-loader/issues/234)) ([6980095](https://github.com/webpack-contrib/stylus-loader/commit/6980095a97819a816fb8418d8252b4ee7779eec8))
-* added webpack resolver ([#231](https://github.com/webpack-contrib/stylus-loader/issues/231)) ([da566a6](https://github.com/webpack-contrib/stylus-loader/commit/da566a6da8047c5ffaae8b97f075f896e0152486))
-* added `compress` option ([5278fb4](https://github.com/webpack-contrib/stylus-loader/commit/5278fb452a7411078839e83a8b045d516683b412))
-* added `additionalData` option ([#248](https://github.com/webpack-contrib/stylus-loader/issues/248)) ([9f781b7](https://github.com/webpack-contrib/stylus-loader/commit/9f781b706ab971abdf99440ee1b5d8157206638f))
-* added `hoistAtrules` option ([#276](https://github.com/webpack-contrib/stylus-loader/issues/276)) ([90ff982](https://github.com/webpack-contrib/stylus-loader/commit/90ff9822736943a2c03bdcd0d3a4740cd3811484))
-* added `lineNumbers` option ([#278](https://github.com/webpack-contrib/stylus-loader/issues/278)) ([637575c](https://github.com/webpack-contrib/stylus-loader/commit/637575c7a7a8e6889df639fa4d0f0255649823dd))
-* added `webpackImporter` option ([#244](https://github.com/webpack-contrib/stylus-loader/issues/244)) ([bbe232a](https://github.com/webpack-contrib/stylus-loader/commit/bbe232ad8d363f0d2cb7e55f85f10bd3cd8886e4))
-* allow to pass `stylusOptions` using function ([028a759](https://github.com/webpack-contrib/stylus-loader/commit/028a7595e77b2532ee497df52ab8611de69dfd5f))
-* allow to define raw parameter ([b5c75ed](https://github.com/webpack-contrib/stylus-loader/commit/b5c75edab99494cb1d3dfad496e409c2930e8027))
+- added loader options validation ([#234](https://github.com/webpack-contrib/stylus-loader/issues/234)) ([6980095](https://github.com/webpack-contrib/stylus-loader/commit/6980095a97819a816fb8418d8252b4ee7779eec8))
+- added webpack resolver ([#231](https://github.com/webpack-contrib/stylus-loader/issues/231)) ([da566a6](https://github.com/webpack-contrib/stylus-loader/commit/da566a6da8047c5ffaae8b97f075f896e0152486))
+- added `compress` option ([5278fb4](https://github.com/webpack-contrib/stylus-loader/commit/5278fb452a7411078839e83a8b045d516683b412))
+- added `additionalData` option ([#248](https://github.com/webpack-contrib/stylus-loader/issues/248)) ([9f781b7](https://github.com/webpack-contrib/stylus-loader/commit/9f781b706ab971abdf99440ee1b5d8157206638f))
+- added `hoistAtrules` option ([#276](https://github.com/webpack-contrib/stylus-loader/issues/276)) ([90ff982](https://github.com/webpack-contrib/stylus-loader/commit/90ff9822736943a2c03bdcd0d3a4740cd3811484))
+- added `lineNumbers` option ([#278](https://github.com/webpack-contrib/stylus-loader/issues/278)) ([637575c](https://github.com/webpack-contrib/stylus-loader/commit/637575c7a7a8e6889df639fa4d0f0255649823dd))
+- added `webpackImporter` option ([#244](https://github.com/webpack-contrib/stylus-loader/issues/244)) ([bbe232a](https://github.com/webpack-contrib/stylus-loader/commit/bbe232ad8d363f0d2cb7e55f85f10bd3cd8886e4))
+- allow to pass `stylusOptions` using function ([028a759](https://github.com/webpack-contrib/stylus-loader/commit/028a7595e77b2532ee497df52ab8611de69dfd5f))
+- allow to define raw parameter ([b5c75ed](https://github.com/webpack-contrib/stylus-loader/commit/b5c75edab99494cb1d3dfad496e409c2930e8027))
 
 ### Bug Fixes
 
-* `binop` nodes ([#262](https://github.com/webpack-contrib/stylus-loader/issues/262)) ([538f4ba](https://github.com/webpack-contrib/stylus-loader/commit/538f4ba8d50a97808f6ea97cfcbe569d0b853f46))
-* sourcemap ([#249](https://github.com/webpack-contrib/stylus-loader/issues/249)) ([7066583](https://github.com/webpack-contrib/stylus-loader/commit/7066583250e37547d2e666939537a48c92767924))
-* glob ([#279](https://github.com/webpack-contrib/stylus-loader/issues/279)) ([409877c](https://github.com/webpack-contrib/stylus-loader/commit/409877cc5f0ee57d4cc20588b1603539491a7f42))
-* watching glob
-* error reporting ([3233f86](https://github.com/webpack-contrib/stylus-loader/commit/3233f861d4e935e19fbede34127ca1a4c82997d8))
+- `binop` nodes ([#262](https://github.com/webpack-contrib/stylus-loader/issues/262)) ([538f4ba](https://github.com/webpack-contrib/stylus-loader/commit/538f4ba8d50a97808f6ea97cfcbe569d0b853f46))
+- sourcemap ([#249](https://github.com/webpack-contrib/stylus-loader/issues/249)) ([7066583](https://github.com/webpack-contrib/stylus-loader/commit/7066583250e37547d2e666939537a48c92767924))
+- glob ([#279](https://github.com/webpack-contrib/stylus-loader/issues/279)) ([409877c](https://github.com/webpack-contrib/stylus-loader/commit/409877cc5f0ee57d4cc20588b1603539491a7f42))
+- watching glob
+- error reporting ([3233f86](https://github.com/webpack-contrib/stylus-loader/commit/3233f861d4e935e19fbede34127ca1a4c82997d8))
 
 # Change Log
 
