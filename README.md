@@ -44,13 +44,26 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
-        loader: "stylus-loader", // compiles Styl to CSS
+        test: /\.styl$/i,
+        // Uses the built-in CSS support of webpack, i.e. `.module.styl` files
+        // are treated as CSS modules, other files are treated as plain CSS
+        type: "css/auto",
+        // Compiles Stylus to CSS
+        use: ["stylus-loader"],
       },
     ],
   },
+  experiments: {
+    // Enables the built-in CSS support of webpack
+    css: true,
+  },
 };
 ```
+
+> [!NOTE]
+>
+> The built-in CSS support of webpack requires `experiments.css` to be enabled.
+> Alternatively you can still chain the loader with [`css-loader`](https://github.com/webpack/css-loader) and [`style-loader`](https://github.com/webpack/style-loader) (or the [`mini-css-extract-plugin`](https://github.com/webpack/mini-css-extract-plugin)), see [Using `css-loader` and `style-loader`](#using-css-loader-and-style-loader).
 
 Finally, run `webpack` using the method you normally use (e.g., via CLI or an npm script).
 
@@ -101,14 +114,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          {
-            loader: "style-loader",
-          },
-          {
-            loader: "css-loader",
-          },
           {
             loader: "stylus-loader",
             options: {
@@ -199,6 +207,9 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
@@ -211,10 +222,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -239,6 +249,9 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
@@ -258,14 +271,8 @@ module.exports = {
     rules: [
       {
         test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: true,
-            },
-          },
           {
             loader: "stylus-loader",
             options: {
@@ -275,6 +282,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -301,10 +311,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/i,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -314,6 +323,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -351,10 +363,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -364,6 +375,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -377,10 +391,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -401,6 +414,9 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
@@ -411,10 +427,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -434,6 +449,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -458,10 +476,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/i,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -471,6 +488,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -484,10 +504,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/i,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -498,6 +517,9 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
@@ -505,7 +527,7 @@ module.exports = {
 
 ### Normal Usage
 
-Chain `stylus-loader` with the [`css-loader`](https://github.com/webpack/css-loader) and [`style-loader`](https://github.com/webpack/style-loader) to immediately apply all styles to the DOM.
+Set the module `type` to `css/auto` and enable `experiments.css` to let webpack handle the generated CSS with its built-in CSS support, without any extra loaders or plugins.
 
 **webpack.config.js**
 
@@ -514,16 +536,42 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
+        test: /\.styl$/i,
+        type: "css/auto", // Handles the generated CSS using the built-in CSS support of webpack
+        use: ["stylus-loader"], // Compiles Stylus to CSS
+      },
+    ],
+  },
+  experiments: {
+    css: true,
+  },
+};
+```
+
+The `css/auto` module type treats `*.module.styl` files as [CSS modules](#css-modules) and any other file as plain CSS.
+Use `type: "css"` to always treat the file as plain CSS, or `type: "css/module"` to always treat it as a CSS module.
+
+### Using `css-loader` and `style-loader`
+
+The built-in CSS support of webpack is not mandatory, you can still chain the `stylus-loader` with [`css-loader`](https://github.com/webpack/css-loader) and [`style-loader`](https://github.com/webpack/style-loader) to immediately apply all styles to the DOM.
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl$/i,
         use: [
           {
-            loader: "style-loader", // creates style nodes from JS strings
+            loader: "style-loader", // Creates style nodes from JS strings
           },
           {
-            loader: "css-loader", // translates CSS into CommonJS
+            loader: "css-loader", // Translates CSS into CommonJS
           },
           {
-            loader: "stylus-loader", // compiles Stylus to CSS
+            loader: "stylus-loader", // Compiles Stylus to CSS
           },
         ],
       },
@@ -531,6 +579,8 @@ module.exports = {
   },
 };
 ```
+
+Note that in this case the `type` and `experiments.css` options should not be set for this rule, and options like `sourceMap` have to be enabled for the `css-loader` too.
 
 ### Source maps
 
@@ -545,15 +595,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: true,
-            },
-          },
           {
             loader: "stylus-loader",
             options: {
@@ -563,6 +607,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -576,16 +623,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
           {
-            loader: "style-loader", // creates style nodes from JS strings
-          },
-          {
-            loader: "css-loader", // translates CSS into CommonJS
-          },
-          {
-            loader: "stylus-loader", // compiles Stylus to CSS
+            loader: "stylus-loader",
             options: {
               stylusOptions: {
                 use: [require("nib")()],
@@ -596,6 +638,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };
 ```
@@ -625,10 +670,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl$/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          "style-loader",
-          "css-loader",
           {
             loader: "stylus-loader",
             options: {
@@ -642,12 +686,18 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
 ### In production
 
-Usually, it's recommended to extract the style sheets into a dedicated CSS file in production using the [MiniCssExtractPlugin](https://github.com/webpack/mini-css-extract-plugin). This way your styles are not dependent on JavaScript.
+The built-in CSS support of webpack always extracts style sheets into dedicated files, so your styles are not dependent on JavaScript, which improves performance and cacheability.
+The name of the generated files can be configured using the [`output.cssFilename`](https://webpack.js.org/configuration/output/#outputcssfilename) and [`output.cssChunkFilename`](https://webpack.js.org/configuration/output/#outputcsschunkfilename) options.
+
+When you chain the loader with `css-loader` and `style-loader` instead, it's recommended to extract the style sheets into a dedicated CSS file in production using the [MiniCssExtractPlugin](https://github.com/webpack/mini-css-extract-plugin). This way your styles are not dependent on JavaScript.
 
 ### webpack resolver
 
@@ -687,14 +737,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.styl/,
+        test: /\.styl$/i,
+        type: "css/auto",
         use: [
-          {
-            loader: "style-loader",
-          },
-          {
-            loader: "css-loader",
-          },
           {
             loader: "stylus-loader",
             options: {
@@ -707,6 +752,9 @@ module.exports = {
       },
     ],
   },
+  experiments: {
+    css: true,
+  },
 };
 ```
 
@@ -716,10 +764,39 @@ Bundling CSS with webpack has some nice advantages like referencing images and f
 In production, on the other hand, it's not a good idea to apply your style sheets depending on JS execution.
 Rendering may be delayed or even a [FOUC](https://en.wikipedia.org/wiki/Flash_of_unstyled_content) might be visible. Thus it's often still better to have them as separate files in your final production build.
 
-There are two possibilities to extract a style sheet from the bundle:
+The built-in CSS support of webpack does this out of the box: every entry point and chunk gets its own style sheet, no extra plugin required.
+When you chain the loader with the `css-loader` instead, use the [MiniCssExtractPlugin](https://github.com/webpack/mini-css-extract-plugin) to extract a style sheet from the bundle.
 
-- [`extract-loader`](https://github.com/peerigon/extract-loader) (simpler, but specialized on the css-loader's output)
-- [MiniCssExtractPlugin](https://github.com/webpack/mini-css-extract-plugin) (more complex, but works in all use-cases)
+### CSS modules
+
+With the built-in CSS support of webpack, `*.module.styl` files are treated as [CSS modules](https://github.com/css-modules/css-modules) when the module `type` is `css/auto`, and all files are treated as CSS modules when the module `type` is `css/module`:
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.styl$/i,
+        type: "css/auto",
+        use: ["stylus-loader"],
+      },
+    ],
+  },
+  experiments: {
+    css: true,
+  },
+};
+```
+
+**index.js**
+
+```js
+import * as styles from "./style.module.styl";
+
+document.body.className = styles.box;
+```
 
 ## Contributing
 
