@@ -1,0 +1,73 @@
+exports[`built-in CSS support of webpack > should generate source maps 1`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should generate source maps 2`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should throw an error 1`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should throw an error 2`] = `
+[
+  "ModuleBuildError: Module build failed (from \`replaced original path\`):\\n/test/fixtures/broken.styl:1:8",
+  "ModuleError: Module Error (from \`replaced original path\`):\\nexpected \\"indent\\", got \\";\\""
+]
+`;
+
+exports[`built-in CSS support of webpack > should work 1`] = `
+"/*!************************!*\\\\\\n  !*** css ./basic.styl ***!\\n  \\\\************************/\\nbody {\\n  font: 12px Helvetica, Arial, sans-serif;\\n}\\na.button {\\n  -webkit-border-radius: 5px;\\n  -moz-border-radius: 5px;\\n  border-radius: 5px;\\n}\\n\\n"
+`;
+
+exports[`built-in CSS support of webpack > should work 2`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work 3`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with CSS modules 1`] = `
+{
+  "nav": "stylusLoaderExport-css-modules_style_module_styl-nav",
+  "title": "stylusLoaderExport-css-modules_style_module_styl-title"
+}
+`;
+
+exports[`built-in CSS support of webpack > should work with CSS modules 2`] = `
+"/*!*******************************************!*\\\\\\n  !*** css ./css-modules/style.module.styl ***!\\n  \\\\*******************************************/\\n.stylusLoaderExport-css-modules_style_module_styl-nav {\\n  color: #eee;\\n}\\n.stylusLoaderExport-css-modules_style_module_styl-title {\\n  font-weight: bold;\\n}\\n\\n"
+`;
+
+exports[`built-in CSS support of webpack > should work with CSS modules 3`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with CSS modules 4`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with \"@import\" 1`] = `
+"/*!******************************!*\\\\\\n  !*** css ./import-styl.styl ***!\\n  \\\\******************************/\\n.imported-stylus {\\n  border: 5px;\\n}\\n\\n"
+`;
+
+exports[`built-in CSS support of webpack > should work with \"@import\" 2`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with \"@import\" 3`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with \"url()\" 1`] = `
+"/*!***********************!*\\\\\\n  !*** css ./urls.styl ***!\\n  \\\\***********************/\\nbody {\\n  background: url(img.png);\\n}\\n\\n"
+`;
+
+exports[`built-in CSS support of webpack > should work with \"url()\" 2`] = `
+[]
+`;
+
+exports[`built-in CSS support of webpack > should work with \"url()\" 3`] = `
+[]
+`;
