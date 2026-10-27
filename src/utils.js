@@ -131,6 +131,20 @@ function isProductionLikeMode(loaderContext) {
 }
 
 /**
+ * The path a resource's contents resolve from. A `data:` URI has none of its own,
+ * so it reads as a file in the loader's context.
+ * @param {LoaderContext} loaderContext loader context
+ * @returns {string} the resource's path, or a file in its context for a `data:` URI
+ */
+function getResourcePath(loaderContext) {
+  const { resourcePath } = loaderContext;
+
+  return resourcePath.startsWith("data:")
+    ? path.join(loaderContext.context, "stdin.styl")
+    : resourcePath;
+}
+
+/**
  * Derives the stylus options from the loader context and normalizes its values with sane defaults.
  * @param {LoaderContext} loaderContext loader context
  * @param {LoaderOptions} loaderOptions loader options
@@ -144,8 +158,8 @@ async function getStylusOptions(loaderContext, loaderOptions) {
       : loaderOptions.stylusOptions || {};
   /** @type {StylusOptions} */
   const stylusOptions = {
-    filename: loaderContext.resourcePath,
-    dest: path.dirname(loaderContext.resourcePath),
+    filename: getResourcePath(loaderContext),
+    dest: path.dirname(getResourcePath(loaderContext)),
     ...options,
     // Keep track of imported files (used by Stylus CLI watch mode)
 
@@ -672,7 +686,7 @@ async function createEvaluator(loaderContext, code, options) {
     globResolve,
     seen,
     code,
-    loaderContext.resourcePath,
+    getResourcePath(loaderContext),
     options,
   );
 
@@ -689,7 +703,7 @@ async function createEvaluator(loaderContext, code, options) {
         fileResolve,
         globResolve,
         isGlob,
-        path.dirname(loaderContext.resourcePath),
+        path.dirname(getResourcePath(loaderContext)),
         importPath,
       ),
     });
@@ -787,7 +801,7 @@ async function createEvaluator(loaderContext, code, options) {
           filename = filename.replace(/^\/\/\?\//, "");
         }
 
-        const isEntrypoint = loaderContext.resourcePath === filename;
+        const isEntrypoint = getResourcePath(loaderContext) === filename;
 
         if (isEntrypoint) {
           dependency = resolvedImportDependencies.get(nodePath);
