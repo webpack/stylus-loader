@@ -31,7 +31,16 @@ describe("data: URI resource", () => {
             {
               mimetype: "text/stylus",
               type: "css/auto",
-              loader: path.resolve(__dirname, "../src/index.js"),
+              use: [
+                {
+                  loader: path.resolve(
+                    __dirname,
+                    "./helpers/dataUriContextLoader.cjs",
+                  ),
+                  options: { context: path.resolve(__dirname, "fixtures") },
+                },
+                path.resolve(__dirname, "../src/index.js"),
+              ],
             },
           ],
         },
