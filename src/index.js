@@ -1,5 +1,6 @@
 import path from "node:path";
 
+import check from "./options.check.js";
 import schema from "./options.json" with { type: "json" };
 import {
   createEvaluator,
@@ -24,7 +25,7 @@ import {
  * @returns {Promise<void>} loader result
  */
 export default async function stylusLoader(source) {
-  const options = this.getOptions(/** @type {Schema} */ (schema));
+  const options = this.getOptions(/** @type {Schema} */ (schema), check);
   const callback = this.async();
 
   let implementation;
