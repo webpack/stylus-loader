@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.1.1
+
+### Patch Changes
+
+- Pass a precompiled options check to `this.getOptions`, so webpack versions that accept it skip compiling the options schema. (by [@alexander-akait](https://github.com/alexander-akait) in [#482](https://github.com/webpack/stylus-loader/pull/482))
+
 ## 9.1.0
 
 ### Minor Changes
